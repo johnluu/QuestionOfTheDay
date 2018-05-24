@@ -145,6 +145,18 @@ begin
   );
 end;
 
+declare
+   l_job_exists number;
+begin
+   select count(*) into l_job_exists
+     from user_scheduler_jobs
+    where job_name = 'UPDATE_TABLE'
+          ;
+
+   if l_job_exists = 1 then
+      dbms_scheduler.drop_job(job_name => 'UPDATE_TABLE');
+   end if;
+end;
 --https://dba.stackexchange.com/questions/135571/auto-update-a-column-every-24-hours-in-oracle-database
 
 --SELECT owner, job_name, comments FROM dba_scheduler_jobs;

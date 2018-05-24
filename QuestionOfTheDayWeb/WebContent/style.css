@@ -9,6 +9,7 @@
 .maincontainer{
 	display: flex;
 	flex-direction: row;
+	margin:0%, 20%
 }
 
 
@@ -21,6 +22,7 @@
 .middlecontainer{
 	width: 60%;
 	flex-direction: column;
+	margin:0%, 20%
 	
 }
 
@@ -34,11 +36,9 @@
 	flex-direction: column;
 }
 
-
-.Questionformcontainer{
+.rightcontainerHeading
+{	text-align: center;
 	width: 100%;
-	text-align: center;
-	
 }
 
 .footer{
@@ -46,3 +46,30 @@
 	height: 10vh;
 	background-color: blue;
 }
+
+
+.Questionmaincontainer{
+	width: 100%;
+	margin:0%, 20%
+	
+}
+
+.Questionrightcontainer{
+	width: 20%;
+	
+	
+}
+
+.Questionleftcontainer{
+	width: 20%;
+	
+	
+}
+
+
+.Questionleftcontainer{
+	
+	
+}
+
+

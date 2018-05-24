@@ -70,4 +70,10 @@ public class OracleQueries {
 	public final static String  GETTOPOPTIONS = "SELECT OPTIONS.* FROM OPTIONS "
 	+ "JOIN QUESTIONS ON QUESTIONS.QUESTION_ID = OPTIONS.QUESTION_ID "
 		+		 "where QUESTIONS.QUESTION_DATE >= trunc(sysdate)";
+	
+	public final static String  GETQUESTIONOPTION = "SELECT * FROM OPTIONS "
+			+ "where QUESTION_ID = ? ";
+	
+	public final static String  GETUSERQCHOICES = "SELECT OPTION_ID FROM USER_CHOICES "
+			+ "where USER_ID = ? and QUESTION_ID = ?";
 }

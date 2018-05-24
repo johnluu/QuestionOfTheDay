@@ -3,13 +3,13 @@ package qofd.Models;
 public class Option {
 
 	private int options_id;
-	private int new_question_id;
+	private int question_id;
 	private String option_text;
 	private int Option_score;
 	
 	public Option(int options_id, int new_question_id, String option_text, int option_score) {
 		this.options_id = options_id;
-		this.new_question_id = new_question_id;
+		this.question_id = new_question_id;
 		this.option_text = option_text;
 		Option_score = option_score;
 	}
@@ -24,12 +24,12 @@ public class Option {
 		this.options_id = options_id;
 	}
 
-	public int getNew_question_id() {
-		return new_question_id;
+	public int get_question_id() {
+		return question_id;
 	}
 
-	public void setNew_question_id(int new_question_id) {
-		this.new_question_id = new_question_id;
+	public void setNew_question_id(int question_id) {
+		this.question_id = question_id;
 	}
 
 	public String getOption_text() {

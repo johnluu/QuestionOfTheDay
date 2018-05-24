@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.HashSet;
 
 import qofd.SystemInterfaces.UserChoicesDAOI;
 import qofd.Utils.OracleQueries;
@@ -150,6 +151,43 @@ public class UserChoicesDAO implements UserChoicesDAOI{
 		
 		
 		return userChoices;
+	}
+	
+	@Override
+	public int getUserQChoice(int userid, int questionid) throws SQLException {
+		// TODO Auto-generated method stub
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		int userChoice = 0;
+		ResultSet result = null;
+		
+		try {
+			conn = OracleConnection.getConnection();
+			stmt = conn.prepareStatement(OracleQueries.GETUSERQCHOICES);
+			stmt.setInt(1, userid);
+			stmt.setInt(2, questionid);
+			result = stmt.executeQuery();
+			
+			if (result.next())
+				userChoice = result.getInt(1);
+			
+			
+			
+			
+		} catch (ClassNotFoundException | IOException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		if(conn != null)
+			conn.close();
+		if(result != null)
+			result.close();
+		if(stmt != null)
+			stmt.close();
+		
+		
+		return userChoice;
 	}
 
 }

@@ -25,7 +25,7 @@ public class OptionDAO implements OptionsDAOI{
 		
 		try {
 			conn = OracleConnection.getConnection();
-			stmt = conn.prepareStatement(OracleQueries.GETNEWQUESTIONOPTION);
+			stmt = conn.prepareStatement(OracleQueries.GETQUESTIONOPTION);
 			stmt.setInt(1, questionid);
 			result = stmt.executeQuery();
 			
