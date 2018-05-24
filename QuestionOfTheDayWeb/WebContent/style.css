@@ -1,0 +1,48 @@
+
+
+.header{
+	height: 20vh;
+	background-color: coral;
+	
+}
+
+.maincontainer{
+	display: flex;
+	flex-direction: row;
+}
+
+
+
+.leftcontainer{
+	width: 20%;
+	flex-direction: column;
+}
+
+.middlecontainer{
+	width: 60%;
+	flex-direction: column;
+	
+}
+
+.middlecontainerHeading
+{	text-align: center;
+	width: 100%;
+}
+
+.rightcontainer{
+	width: 20%;
+	flex-direction: column;
+}
+
+
+.Questionformcontainer{
+	width: 100%;
+	text-align: center;
+	
+}
+
+.footer{
+	
+	height: 10vh;
+	background-color: blue;
+}
