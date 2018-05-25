@@ -47,7 +47,7 @@ public class OracleQueries {
 	public final static String  GETALLQUESTION = "SELECT * FROM QUESTIONS";
 
 	public final static String  GETTODAYQUESTION = "SELECT * FROM QUESTIONS "
-			+ "where QUESTION_DATE >= trunc(sysdate)";
+			+ "where QUESTION_DATE >= trunc(sysdate)-1";
 	
 	public final static String  GETQUESTION = "SELECT * FROM QUESTIONS "
 			+ "where QUESTION_ID = ? ";
@@ -57,6 +57,9 @@ public class OracleQueries {
 	
 	public final static String  CREATEUSERCHOICES = "INSERT INTO USER_CHOICES(USER_ID,QUESTION_ID,OPTION_ID) "
 			+ "VALUES(?,?,?)";
+	
+	public final static String  INCQUESTIONSCORE = "UPDATE QUESTIONs SET QUESTION_SCORE = QUESTION_SCORE + 1 " + 
+			"WHERE QUESTION_ID = ?";
 	
 	public final static String INCOPTIONSCORE = "UPDATE OPTIONS SET OPTION_SCORE = OPTION_SCORE + 1 " + 
 			"WHERE OPTION_ID = ?";
@@ -69,11 +72,17 @@ public class OracleQueries {
 			
 	public final static String  GETTOPOPTIONS = "SELECT OPTIONS.* FROM OPTIONS "
 	+ "JOIN QUESTIONS ON QUESTIONS.QUESTION_ID = OPTIONS.QUESTION_ID "
-		+		 "where QUESTIONS.QUESTION_DATE >= trunc(sysdate)";
+		+		 "where QUESTIONS.QUESTION_DATE >= trunc(sysdate)-1";
 	
 	public final static String  GETQUESTIONOPTION = "SELECT * FROM OPTIONS "
 			+ "where QUESTION_ID = ? ";
 	
 	public final static String  GETUSERQCHOICES = "SELECT OPTION_ID FROM USER_CHOICES "
 			+ "where USER_ID = ? and QUESTION_ID = ?";
+	
+	public final static String  GETQUESTIONCOMMENT = "SELECT * FROM COMMENTS "
+			+ "where QUESTION_ID = ? ";
+	
+	public final static String  CREATECOMMENT = "insert into comments(user_id,question_id,option_id,comment_text,comment_date) " 
+			+ "values(?,?,?,?,sysdate)";
 }

@@ -6,7 +6,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
-import java.util.HashSet;
 
 import qofd.SystemInterfaces.UserChoicesDAOI;
 import qofd.Utils.OracleQueries;
@@ -19,6 +18,7 @@ public class UserChoicesDAO implements UserChoicesDAOI{
 		Connection conn = null;
 		PreparedStatement stmt = null;
 		PreparedStatement stmt2 = null;
+		PreparedStatement stmt3 = null;
 		int id = 0;
 		ResultSet result = null;
 		String[] col = {"option_id"};
@@ -26,6 +26,7 @@ public class UserChoicesDAO implements UserChoicesDAOI{
 		try {
 			conn = OracleConnection.getConnection();
 			stmt = conn.prepareStatement(OracleQueries.CREATEUSERCHOICES, col);
+
 			
 			stmt.setInt(1, userid);
 			stmt.setInt(2, questionid);
@@ -38,6 +39,11 @@ public class UserChoicesDAO implements UserChoicesDAOI{
 			
 			if (result.next())
 			{
+				
+				stmt3 = conn.prepareStatement(OracleQueries.INCQUESTIONSCORE);
+				stmt3.setInt(1,questionid);
+				stmt3.executeUpdate();
+				
 				stmt2 = conn.prepareStatement(OracleQueries.INCOPTIONSCORE);
 				stmt2.setInt(1, optionid);
 				stmt2.executeUpdate();
@@ -62,6 +68,8 @@ public class UserChoicesDAO implements UserChoicesDAOI{
 			stmt.close();
 		if(stmt2 != null)
 			stmt.close();
+		if(stmt3 != null)
+			stmt3.close();
 		
 		
 		
@@ -69,7 +77,7 @@ public class UserChoicesDAO implements UserChoicesDAOI{
 	}
 
 	@Override
-	public int changeUserChoice(int userid, int questionid,int oldoptionid, int optionid ) {
+	public int changeUserChoice(int userid, int questionid,int oldoptionid, int optionid ) throws SQLException {
 		
 
 		Connection conn = null;
@@ -89,13 +97,9 @@ public class UserChoicesDAO implements UserChoicesDAOI{
 			
 
 			
-			stmt.executeUpdate();
-			
-			
-			
-		
+				result = stmt.executeUpdate();
 				
-				
+				if(result > 0) {
 				stmt2 = conn.prepareStatement(OracleQueries.DECOPTIONSCORE);
 				stmt3 = conn.prepareStatement(OracleQueries.INCOPTIONSCORE);
 				
@@ -104,6 +108,7 @@ public class UserChoicesDAO implements UserChoicesDAOI{
 				stmt2.executeUpdate();
 				stmt3.setInt(1, optionid);
 				stmt3.executeUpdate();
+				}
 			
 			
 			
@@ -113,6 +118,14 @@ public class UserChoicesDAO implements UserChoicesDAOI{
 		}
 		
 		
+		if(conn != null)
+			conn.close();
+		if(stmt != null)
+			stmt.close();
+		if(stmt2 != null)
+			stmt.close();
+		if(stmt3 != null)
+			stmt3.close();
 		
 		return result;
 	}

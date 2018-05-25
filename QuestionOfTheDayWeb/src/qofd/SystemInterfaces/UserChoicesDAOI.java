@@ -2,9 +2,7 @@ package qofd.SystemInterfaces;
 
 import java.sql.SQLException;
 import java.util.HashMap;
-import java.util.HashSet;
 
-import qofd.Models.Option;
 
 public interface UserChoicesDAOI {
 

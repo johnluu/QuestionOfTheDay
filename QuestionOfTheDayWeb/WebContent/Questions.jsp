@@ -2,17 +2,21 @@
     pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html>
 
+<%@ page import = "qofd.Dao.UserDAO" %>
 <%@ page import = "qofd.Dao.UserChoicesDAO" %>
 <%@ page import = "qofd.Dao.UserWatchingDAO" %>
 <%@ page import = "qofd.Dao.NewQuestionDAO" %>
 <%@ page import = "qofd.Dao.QuestionDAO" %>
 <%@ page import = "qofd.Models.Question" %>
 <%@ page import = "qofd.Dao.OptionDAO" %>
+<%@ page import = "qofd.Dao.CommentDAO" %>
 <%@ page import = "java.text.SimpleDateFormat" %>
 <%@ page import = "java.util.Date" %>
+<%@ page import = "java.util.Calendar" %>
 <%@ page import = "java.util.List" %>
 <%@ page import = "qofd.Models.User" %>
 <%@ page import = "qofd.Models.Option" %>
+<%@ page import = "qofd.Models.Comments" %>
 
 
 
@@ -28,6 +32,9 @@
 <%! UserChoicesDAO ucDAO = new UserChoicesDAO(); %>
 <%! NewQuestionDAO nqDAO = new NewQuestionDAO(); %>
 <%! UserWatchingDAO uwDAO = new UserWatchingDAO(); %>
+<%! CommentDAO cDAO = new CommentDAO(); %>
+<%! UserDAO uDAO = new UserDAO(); %>
+
 
 
 	<%
@@ -52,12 +59,16 @@
 		}
 		else
 		{
+			Calendar cal = Calendar.getInstance();
+			cal.add(Calendar.DATE, -1);
 			
 			question = qDAO.getQuestion(Integer.parseInt(request.getParameter("question")));
 			String questiondate = monthformat.format(sdf.parse(question.getDate()));
-			String today = monthformat.format(new Date());
+			String yesterday = monthformat.format(cal.getTime());
 			
-			if(questiondate.equals(today))
+			
+			out.print(question.getDate());
+			if(questiondate.equals(yesterday))
 				 isnew = true;
 		}
 %>
@@ -92,9 +103,12 @@ if(!options.isEmpty())
 		else
 		out.print("<input type='radio' name = 'optionvalue" + "' value = '" + o.getOptions_id() + "'> "+ o.getOption_text());
 
-		out.print("<input type= 'submit' name='questionbutton" + question.getQuestion_id() + "' value ='Submit'>");
+		out.print(o.getOption_score());
+		out.print("<br>");
 
 	}
+	out.print("<input type= 'submit' name='questionbutton'" + "value ='Submit'>");
+
 	out.print("</form>");
 	
 	
@@ -113,15 +127,43 @@ if(!options.isEmpty())
 				ucDAO.changeUserChoice(user.getUser_id(), question.getQuestion_id(), choice, Integer.parseInt(optionid));
 				
 			}
-			response.sendRedirect("question.jsp");
+			response.sendRedirect("Questions.jsp?&question=" + question.getQuestion_id());
 		}
 	}
 	
-	
-	
-	
-	
 }
+	if(choice != 0){
+%>
+
+			<form method = "post">
+  			<textarea name="getcomment" rows="10" cols="30">Enter Comment Here.</textarea>
+  			<br>
+ 			 <input type="submit" name='Commentsubmit' value= 'Comment'>
+			</form>
+<%
+	if(request.getParameter("Commentsubmit")!= null)
+	{
+		String getComment = request.getParameter("getcomment");
+		Comments comment = new Comments(user.getUser_id(),question.getQuestion_id(),choice, getComment);
+		
+		
+		cDAO.createComment(comment);
+		
+	}
+}
+	
+
+
+	List<Comments> commentList = cDAO.getQuestionComments(question.getQuestion_id());
+
+	out.print("<h1>" +  question.getQuestion_id() + "</h1>");
+	for(Comments comment: commentList)
+	{
+		User commentUser = uDAO.getUser(comment.getUser_id());
+		out.print(commentUser.getFirst_name() + " " + commentUser.getLast_name() + " says <br>");
+		out.print(comment.getComment_text() + "<br>");
+	}
+	
 %>
 
 

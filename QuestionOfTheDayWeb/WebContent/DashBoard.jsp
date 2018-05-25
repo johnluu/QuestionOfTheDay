@@ -77,7 +77,7 @@ else
 		
 		
 		out.print("<div class = 'Questionformcontainer'>");
-		out.print("<a href ='Questions.jsp?&question=" + q.getQuestion_id()+ "'>" + q.getQuestion_text() + "</a> <br/>");
+		out.print("<a href ='Questions.jsp?&question=" + q.getQuestion_id()+ "'>" + q.getQuestion_text() + "</a>" + q.getQuestion_score()  +  "<br/>");
 		out.print("<p> "+ q.getDate()  + "</p> <br/>");
 		out.print("<form method = 'post'>");
 		

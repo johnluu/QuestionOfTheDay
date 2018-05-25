@@ -6,12 +6,14 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
+import qofd.Dao.CommentDAO;
 import qofd.Dao.NewOptionsDAO;
 import qofd.Dao.NewQuestionDAO;
 import qofd.Dao.QuestionDAO;
 import qofd.Dao.UserChoicesDAO;
 import qofd.Dao.UserDAO;
 import qofd.Dao.UserWatchingDAO;
+import qofd.Models.Comments;
 import qofd.Models.New_Option;
 import qofd.Models.New_Question;
 import qofd.Models.Question;
@@ -22,6 +24,13 @@ public class Test {
 	public static void main(String[] args) throws SQLException {
 
 		UserDAO userDAO = new UserDAO();
+		
+		CommentDAO cDAO = new CommentDAO();
+		
+		List<Comments> commentList = cDAO.getQuestionComments(13);
+		
+		for(Comments comment: commentList)
+			System.out.println(comment.getUser_id());
 		
 //		User user = new User("John@gmail.com", "CALAHAM", "john", "Luu");
 //		userDAO.registerUser(user);
@@ -86,23 +95,25 @@ public class Test {
 //		for(Question z: qList)
 //			System.out.println( z.getQuestion_id() + " " + z.getQuestion_text() + " " + z.getDate());
 //		
-//		q = QDAO.getQuestion(6);
 //		
+	
 //		System.out.println(q.getQuestion_id() + " " + q.getQuestion_text() + " " + q.getDate());
-		
-		UserChoicesDAO uod = new UserChoicesDAO();
-		
-		
-		
-		HashMap<Integer,Integer> userChoices = uod.getUserChoice(1);
-		
-		
-		
-		System.out.println("Question Id: OPTION ID");
-		userChoices.forEach((k,v) -> {
-			System.out.println(k + "  " + v);
-		});
+//		
+//		UserChoicesDAO uod = new UserChoicesDAO();
+//		
+//		
+//		
+//		HashMap<Integer,Integer> userChoices = uod.getUserChoice(1);
+//		
+//		
+//		
+//		System.out.println("Question Id: OPTION ID");
+//		userChoices.forEach((k,v) -> {
+//			System.out.println(k + "  " + v);
+//		});
 //	
+		
+
 	}
 
 }
