@@ -37,9 +37,7 @@
 
 User user = new User();
 
-if(session.getAttribute("user") == null)
-	response.sendRedirect("HomePage.jsp");
-else
+if(session.getAttribute("user") != null)
 	user = (User) session.getAttribute("user");
 
 %>

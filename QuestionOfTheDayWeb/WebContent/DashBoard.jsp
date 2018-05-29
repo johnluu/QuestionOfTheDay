@@ -61,7 +61,8 @@ else
 <% if(menu != null && menu.equals( "archivequestion")){  %>
 <div class = 'leftcontainer'>
 <h1 class = 'leftcontainerHeading'> <a href ='DashBoard.jsp?&menu=questionbydate'>Today's Question</a></h1>
-<%@ include file  ="questionbydate.jsp"%>
+<jsp:include page ="questionsub.jsp"/>
+
 </div>
 
 <div class = 'middlecontainer'>
@@ -71,7 +72,8 @@ else
 
 <div class = 'rightcontainer'>
 <h1 class = 'rightcontainerHeading'><a href ='DashBoard.jsp?&menu=pendingquestion'>Pending questions</a></h1>
-<%@ include file = "pendingquestion.jsp" %>
+<jsp:include page ="pendingquestionsub.jsp"/>
+
 </div>
 <%}  %>
 
@@ -79,7 +81,8 @@ else
 <% if(menu == null || menu.equals("questionbydate")){  %>
 <div class = 'leftcontainer'>
 <h1 class = 'leftcontainerHeading'> <a href ='DashBoard.jsp?&menu=archivequestion'> Archived Question </a></h1>
-<%@ include file = "questionarchivesub.jsp" %>
+<jsp:include page ="questionarchivesub.jsp"/>
+
 
 </div>
 
@@ -89,7 +92,8 @@ else
 
 <div class = 'rightcontainer'>
 <h1 class = 'rightcontainerHeading'><a href ='DashBoard.jsp?&menu=pendingquestion'>Pending questions</a></h1>
-<%@ include file = "pendingquestion.jsp" %>
+<jsp:include page ="pendingquestionsub.jsp"/>
+
 </div>
 <%}  %>
 
@@ -97,7 +101,8 @@ else
 <% if(menu != null && menu.equals( "pendingquestion")){  %>
 <div class = 'leftcontainer'>
 <h1 class = 'leftcontainerHeading'><a href ='DashBoard.jsp?&menu=questionbydate'>Today's Question</a></h1>
-<%@ include file  ="questionbydate.jsp"%>
+<jsp:include page ="questionsub.jsp"/>
+
 </div>
 
 <div class = 'middlecontainer'>
@@ -107,7 +112,8 @@ else
 
 <div class = 'rightcontainer'>
 <h1 class = 'rightcontainerHeading'> <a href ='DashBoard.jsp?&menu=archivequestion'> Archived Question </a></h1>
-<%@ include file = "questionarchivesub.jsp" %>
+<jsp:include page ="questionarchivesub.jsp"/>
+
 </div>
 <%}  %>
 
@@ -120,8 +126,8 @@ else
 
 <script>
 //$(document).ready(function(){
-//
-//        $("#peewee").load("questionarchivemain.jsp");
+
+//       $(".rightcontainerinsert").load("pendingquestionsub.jsp");
 //});
 </script>
 

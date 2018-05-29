@@ -3,25 +3,13 @@
 <!DOCTYPE html>
 
 <%@ page import = "qofd.Dao.UserDAO" %>
-<%@ page import = "qofd.Dao.UserChoicesDAO" %>
 <%@ page import = "qofd.Dao.QuestionDAO" %>
 <%@ page import = "qofd.Models.Question" %>
 <%@ page import = "qofd.Dao.OptionDAO" %>
-<%@ page import = "qofd.Dao.CommentDAO" %>
 <%@ page import = "java.text.SimpleDateFormat" %>
 <%@ page import = "java.util.Date" %>
 <%@ page import = "java.util.Calendar" %>
-<%@ page import = "java.util.List" %>
 <%@ page import = "qofd.Models.User" %>
-<%@ page import = "qofd.Models.Option" %>
-<%@ page import = "qofd.Models.Comments" %>
-<%@ page import = "qofd.Dao.UserWatchingDAO" %>
-<%@ page import="java.util.HashSet" %>
-
-
-
-
-
 
 <html>
 <head>
@@ -32,17 +20,14 @@
 
 <%! QuestionDAO qDAO = new QuestionDAO();%>
 <%! OptionDAO oDAO = new OptionDAO();%>
-<%! UserChoicesDAO ucDAO = new UserChoicesDAO(); %>
-
-<%! CommentDAO cDAO = new CommentDAO(); %>
 <%! UserDAO uDAO = new UserDAO(); %>
-<%! UserWatchingDAO uwDAO = new UserWatchingDAO(); %>
 
 
 
 
 	<%
-		List<Option> options = null;
+	
+
 		Question question = new Question();
 		User user = new User();
 		boolean isnew = false;
@@ -51,30 +36,48 @@
 		else
 		{
 			user = (User) session.getAttribute("user");
+			question = qDAO.getQuestionById(Integer.parseInt(request.getParameter("question")));
+
+			
+			
 			
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.0");
 		SimpleDateFormat monthformat = new SimpleDateFormat("MMM-dd-yyyy");
+
+		Calendar caldayago = Calendar.getInstance();
+		Calendar calweekago = Calendar.getInstance();
 		
-		String Questionid;
-		if(request.getParameter("question") == null)
+		caldayago.add(Calendar.DATE, -1);
+		calweekago.add(Calendar.DATE, -8);
+		
+		Date dayago = caldayago.getTime();
+		Date weekago = calweekago.getTime();
+		Date questiondate = sdf.parse(question.getDate());
+		
+		String questiontype = "";
+		
+		
+		if(questiondate.compareTo(dayago)>0)
 		{
-			response.sendRedirect("DashBoard.jsp");
+			questiontype = "pending";
 		}
-		else
+		
+		else if(questiondate.compareTo(weekago)<0)
 		{
-			Calendar cal = Calendar.getInstance();
-			cal.add(Calendar.DATE, -1);
-			
-			question = qDAO.getQuestionById(Integer.parseInt(request.getParameter("question")));
-			String questiondate = monthformat.format(sdf.parse(question.getDate()));
-			String yesterday = monthformat.format(cal.getTime());
-			
-			
-			out.print(question.getDate());
-			if(questiondate.equals(yesterday))
-				 isnew = true;
+			questiontype = "archive";
 		}
+		
+		else if(questiondate.compareTo(weekago)>=0 && questiondate.compareTo(dayago) <= 0)
+		{
+			questiontype = "current";
+			
+		}
+		question = qDAO.getQuestionById(Integer.parseInt(request.getParameter("question")));
+		
+	
+		
+	
 %>
 
 
@@ -90,92 +93,33 @@
 
 
 <div class = 'middlecontainer'>
-<h1 class = middlecontainerHeading> <% if(isnew) out.print("New Question"); else out.print("Old Question"); %></h1>
-<% 
-int choice = 0;
-choice = ucDAO.getUserQChoice(user.getUser_id(), question.getQuestion_id());
-options = oDAO.getOptionsByQuestionId(question.getQuestion_id());
-out.print(question.getQuestion_text());
-if(!options.isEmpty())
+<h1 class = middlecontainerHeading>  </h1>
+<% if(questiontype.equals("current"))
 {
-
-	out.print("<form method = 'post'>");
-	for(Option o: options)
-	{
-		if(o.getOptions_id() == choice)
-		out.print("<input type='radio' name = 'optionvalue" + "' value = '" + o.getOptions_id() + "' disabled='disabled' checked> "+ o.getOption_text());
-		else
-		out.print("<input type='radio' name = 'optionvalue" + "' value = '" + o.getOptions_id() + "'> "+ o.getOption_text());
-
-		out.print(o.getOption_score());
-		out.print("<br>");
-
-	}
-	out.print("<input type= 'submit' name='questionbutton'" + "value ='Submit'>");
-
-	out.print("</form>");
-	
-	
-	if(request.getParameter("questionbutton") != null)
-	{	
-		
-		String optionid = request.getParameter("optionvalue");
-		if (optionid != null)
-		{
-			if(choice == 0)
-			{
-				ucDAO.createUserChoice(user.getUser_id(), question.getQuestion_id(), Integer.parseInt(optionid));
-			}
-			else
-			{
-				ucDAO.changeUserChoice(user.getUser_id(), question.getQuestion_id(), choice, Integer.parseInt(optionid));
-				
-			}
-			response.sendRedirect("Questions.jsp?&question=" + question.getQuestion_id());
-		}
-	}
-	
-}
-	if(choice != 0){
 %>
-
-			<form method = "post">
-  			<textarea name="getcomment" rows="10" cols="30">Enter Comment Here.</textarea>
-  			<br>
- 			 <input type="submit" name='Commentsubmit' value= 'Comment'>
-			</form>
-<%
-	if(request.getParameter("Commentsubmit")!= null)
-	{
-		String getComment = request.getParameter("getcomment");
-		Comments comment = new Comments(user.getUser_id(),question.getQuestion_id(),choice, getComment);
-		
-		
-		cDAO.createComment(comment);
-		
-	}
+<jsp:include page ="currentquestion.jsp"/>
+<% 
 }
-	
+else if(questiontype.equals("pending"))
+{
+%>
+<jsp:include page ="pendingquestion.jsp"/>
+<% 
+}
+else if(questiontype.equals("archive"))
+{
+%>
+<jsp:include page ="archivedquestion.jsp"/>
+<% 
+}
 
-
-	List<Comments> commentList = cDAO.getQuestionComments(question.getQuestion_id());
-
-	out.print("<h1>" +  question.getQuestion_id() + "</h1>");
-	for(Comments comment: commentList)
-	{
-		User commentUser = uDAO.getUser(comment.getUser_id());
-		out.print(commentUser.getFirst_name() + " " + commentUser.getLast_name() + " says <br>");
-		out.print(comment.getComment_text() + "<br>");
-	}
-	
 %>
 
 
 </div>
 
 <div class = "rightcontainer"> 
-<h1 class = 'rightcontainerHeading'> Pending Question</h1>
-<%@ include file = "pendingquestion.jsp" %>
+<h1 class = 'rightcontainerHeading'>  </h1>
 
 </div>
 

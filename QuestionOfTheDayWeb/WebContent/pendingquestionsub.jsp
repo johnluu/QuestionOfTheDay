@@ -1,3 +1,4 @@
+
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html>
@@ -30,59 +31,65 @@
 		SimpleDateFormat monthformat = new SimpleDateFormat("hh:mm:ss");
 
  %>
+
+
+
 <% 
 
 User user = new User();
 
-if(session.getAttribute("user") != null)
+if(session.getAttribute("user") == null)
+	response.sendRedirect("HomePage.jsp");
+else
 	user = (User) session.getAttribute("user");
 
 %>
-<%
 
-	List<Question> rankQuestionList = qDAO.getQuestionArchiveByDate(1);
-	HashMap<Integer,List<Option>> ranktopOption= oDAO.getOptionArchiveByDate(1);
-	HashMap<Integer,Integer> rankuserChoices = ucDAO.getUserChoice(user.getUser_id());
-	
-	
+
+
+
+
+<% 
+	List<Question> PendingQuestionList = qDAO.getQuestionByDate(0);
+	HashSet<Integer> userWatching = uwDAO.isWatching(user.getUser_id());
+
 
 	
-	 
-	for(Question q: rankQuestionList)
-	{
-		out.print("<div class = 'Questionformcontainer'>");
-		out.print("<a name='archivequestion" + q.getQuestion_id() + "'" +  "href ='Questions.jsp?&question=" + q.getQuestion_id()+ "'>" + q.getQuestion_text() + "</a>" + q.getQuestion_score()  +  "<br/>");
-		out.print("<p> "+ q.getDate()  + "</p> <br/>");
+	for(Question q: PendingQuestionList)
+	{	
+		boolean watching = false;
+		if(userWatching.contains(q.getQuestion_id()))
+			watching = true;
 		
 		
-		int chosen = 0;
 		
-		if(rankuserChoices.containsKey(q.getQuestion_id()))
-		{		
-		chosen = rankuserChoices.get(q.getQuestion_id());
-		}
+		out.print("<div class = 'NewQuestionformcontainer'>");
+		out.print("<form method = 'post'>");	
 		
+		out.print("<a name='question" + q.getQuestion_id() + "'" +  "href ='Questions.jsp?&question=" + q.getQuestion_id()+ "'>" + q.getQuestion_text() + "</a>" + q.getQuestion_score()  +  "<br/>");
+
+		if(watching)
+			out.print("<input type= 'submit' name='watcher" + q.getQuestion_id() + "' value ='UnWatch' >");
+		else
+			out.print("<input type= 'submit' name='watcher" + q.getQuestion_id() + "' value ='Watch' >");
 		
-		for(Option option:ranktopOption.get(q.getQuestion_id()))
+		out.print("<br>" + q.getQuestion_id()); out.print(user.getUser_id() + "<br>");
+
+		if(request.getParameter("watcher" + q.getQuestion_id()) != null)
 		{
-			
-			if(chosen == option.getOptions_id())
-			{
 				
-			out.print("<input type='radio' name = 'rankoptionquestion" + q.getQuestion_id()+"' value = '" + option.getOptions_id() + "' disabled='disabled' checked> "+ option.getOption_text());
-			out.print("!");}
-			else{
-			out.print("<input type='radio' name = 'rankoptionquestion" + q.getQuestion_id()+"' value = '" + option.getOptions_id() + "' disabled>"+ option.getOption_text());
-			}
-				
-			out.print(" " + option.getOption_score() + "</br>");
+		if(watching)
+			uwDAO.unwatch(user.getUser_id(), q.getQuestion_id());
+		else
+			uwDAO.watch(user.getUser_id(), q.getQuestion_id());
+
+			response.sendRedirect("DashBoard.jsp");
 		}
+		
+		out.print("</form>");
 		out.print("</div>");
-		
-
-		
 	}
-
+	
 %>
 
 
