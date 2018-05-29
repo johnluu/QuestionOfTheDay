@@ -25,8 +25,8 @@ public class UserWatchingDAO implements UserWatchingDAOI {
 		
 		try {
 			conn = OracleConnection.getConnection();
-			stmt = conn.prepareStatement(OracleQueries.WATCHQUESTION, col);
-			stmt2 = conn.prepareStatement(OracleQueries.INCWATCH);
+			stmt = conn.prepareStatement(OracleQueries.Watching.WATCHQUESTION, col);
+			stmt2 = conn.prepareStatement(OracleQueries.Watching.INCWATCH);
 			
 			stmt.setInt(1, userid);
 			stmt.setInt(2, questionid);
@@ -69,8 +69,8 @@ public class UserWatchingDAO implements UserWatchingDAOI {
 		
 		try {
 			conn = OracleConnection.getConnection();
-			stmt = conn.prepareStatement(OracleQueries.UNWATCHQUESTION, col);
-			stmt2 = conn.prepareStatement(OracleQueries.DECWATCH);
+			stmt = conn.prepareStatement(OracleQueries.Watching.UNWATCHQUESTION, col);
+			stmt2 = conn.prepareStatement(OracleQueries.Watching.DECWATCH);
 			
 			stmt.setInt(1, userid);
 			stmt.setInt(2, questionid);
@@ -102,7 +102,7 @@ public class UserWatchingDAO implements UserWatchingDAOI {
 		
 		try {
 			conn = OracleConnection.getConnection();
-			stmt = conn.prepareStatement(OracleQueries.ISWATCHING);
+			stmt = conn.prepareStatement(OracleQueries.Watching.ISWATCHING);
 			stmt.setInt(1, userid);
 			result = stmt.executeQuery();
 			

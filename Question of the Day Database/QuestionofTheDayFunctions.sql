@@ -150,30 +150,145 @@ begin
   );
 end;
 
-declare
-   l_job_exists number;
 begin
-   select count(*) into l_job_exists
-     from user_scheduler_jobs
-    where job_name = 'UPDATE_TABLE'
-          ;
+  dbms_scheduler.create_job
+  (
+   job_name             => 'DELETE_PENDING',
+   job_type             => 'PLSQL_BLOCK',
+   job_action           => 'begin
+   
+                            DELETE FROM USER_WATCHING;
+   
+                            DELETE FROM OPTIONS WHERE OPTION_ID IN(
+                            select OPTIONS.OPTION_ID from OPTIONS join questions on questions.question_id = options.question_id 
+                            where questions.question_date >= trunc(sysdate)
+                            and options.QUESTION_ID NOT in 
+                            (select question_id from questions
+                            where QUESTIONS.QUESTION_DATE >= trunc(sysdate)
+                            order by watches desc, question_date asc
+                            fetch first 5 rows only));
 
-   if l_job_exists = 1 then
-      dbms_scheduler.drop_job(job_name => 'UPDATE_TABLE');
-   end if;
+                            delete from questions where question_date >= trunc(sysdate) and question_id not in(
+                            select question_id from questions
+                            where QUESTIONS.QUESTION_DATE >= trunc(sysdate)
+                            order by watches desc, question_date asc
+                            fetch first 5 rows only);
+                            commit; end;',
+                            
+   start_date           =>  trunc(sysdate+1),
+   repeat_interval      => 'FREQ=DAILY;BYHOUR=0;BYMINUTE=0',
+   enabled              => TRUE,
+   auto_drop            => FALSE
+  );
 end;
 
-EXEC  DBMS_SCHEDULER.ENABLE('UPDATE_TABLE');
 
-EXEC DBMS_SCHEDULER.drop_job(job_name => 'UPDATE_TABLE');
+begin
+  dbms_scheduler.create_job
+  (
+   job_name             => 'DELETE_ARCHIVE',
+   job_type             => 'PLSQL_BLOCK',
+   job_action           => 'begin
+   
+                           delete from comments where comments.comment_id in(
+                            select comments.comment_id from comments join questions on comments.question_id = questions.question_id
+                            where question_date < trunc(sysdate-14));
+
+
+                            DELETE FROM USER_CHOICES WHERE QUESTION_ID IN(
+                            SELECT QUESTIONS.QUESTION_ID FROM USER_CHOICES JOIN QUESTIONS ON USER_CHOICES.QUESTION_ID = QUESTIONS.QUESTION_ID
+                            WHERE QUESTION_DATE < TRUNC(SYSDATE-14));
+
+                            DELETE FROM OPTIONS WHERE OPTIONS.OPTION_ID IN(
+                            SELECT OPTIONS.OPTION_ID FROM OPTIONS JOIN QUESTIONS ON OPTIONS.QUESTION_ID = QUESTIONS.QUESTION_ID
+                            WHERE QUESTION_DATE < TRUNC(SYSDATE-14));
+
+
+                            DELETE from questions where question_date < trunc(sysdate-14);
+                            commit; end;',
+                            
+   start_date           =>  trunc(sysdate+1),
+   repeat_interval      => 'FREQ=DAILY;BYHOUR=0;BYMINUTE=0',
+   enabled              => TRUE,
+   auto_drop            => FALSE
+  );
+end;
+
+
+EXEC  DBMS_SCHEDULER.ENABLE('DELETE_PENDING');
+EXEC  DBMS_SCHEDULER.ENABLE('DELETE_ARCHIVE');
+
+EXEC DBMS_SCHEDULER.drop_job(job_name => 'DELETE_PENDING');
+EXEC DBMS_SCHEDULER.drop_job(job_name => 'DELETE_ARCHIVE');
+
 --https://dba.stackexchange.com/questions/135571/auto-update-a-column-every-24-hours-in-oracle-database
 
---SELECT owner, job_name, comments FROM dba_scheduler_jobs;
 
 GRANT SELECT ON SYS.DBA_JOBS_RUNNING TO john;
 
 SELECT * FROM dba_scheduler_jobs; --ONLY DBA CAN USE THIS ONE
-SELECT * FROM user_scheduler_jobs;
+SELECT JOB_NAME,START_DATE,NEXT_RUN_DATE,RUN_COUNT,FAILURE_COUNT,REPEAT_INTERVAL,JOB_ACTION FROM user_scheduler_jobs;
 
 
 
+commit;
+
+select * from questions;
+select * from options;
+
+insert into questions (user_id,question_text,question_date,watches)
+values(1,'How are you my friends10',sysdate-15,1000);
+
+insert into options(question_id,option_text)
+values(63,'Good');
+
+insert into user_choices(question_id,user_id,option_id)
+values(63,1,170);
+
+
+
+insert into comments(user_id,question_id,option_id,comment_text,comment_date)
+values(1,63,170,'fasfas',sysdate);
+
+insert into comments(user_id,question_id,option_id,comment_text,comment_date)
+values(1,1,1,'fasfas',sysdate);
+
+
+SELECT * FROM USER_CHOICES;
+
+
+
+
+
+select comments.*, questions.question_Date from comments join questions on comments.question_id = questions.question_id
+where question_date < trunc(sysdate-14);
+
+SELECT USER_CHOICES.*, QUESTIONS.QUESTION_DATE FROM USER_CHOICES JOIN QUESTIONS ON USER_CHOICES.QUESTION_ID = QUESTIONS.QUESTION_ID
+WHERE QUESTION_DATE < TRUNC(SYSDATE-14);
+
+SELECT OPTIONS.*, QUESTIONS.QUESTION_DATE FROM OPTIONS JOIN QUESTIONS ON OPTIONS.QUESTION_ID = QUESTIONS.QUESTION_ID
+WHERE QUESTION_DATE < TRUNC(SYSDATE-14);
+
+select questions.* from questions where question_date < trunc(sysdate-14);
+
+
+
+
+select * from questions where question_date >= (trunc(sysdate) - 1) and question_date < trunc(sysdate)- (1-1) ;
+
+select * from questions where question_date >= (trunc(sysdate) - 0) and question_date < trunc(sysdate)- (0-1) ;
+
+select * from questions;
+
+
+sELECT USER_CHOICES.QUESTION_ID,USER_CHOICES.OPTION_ID FROM USER_CHOICES join questions on questions.question_id = USER_CHOICES.question_id
+ where USER_CHOICES.USER_ID = 1  and USER_CHOICES.question_id in
+(select QUESTION_ID from questions
+where QUESTION_DATE < trunc(sysdate) and QUESTION_DATE >= trunc(sysdate)-7
+order by question_score desc, question_date asc
+offset (0*5) rows
+fetch next 5 rows only);
+
+select *  from Questions where QUESTION_DATE >= trunc(sysdate)-7 and QUESTION_DATE < TRUNC(SYSDATE);
+select COUNT(*)  from Questions where QUESTION_DATE >= trunc(sysdate)-7 and QUESTION_DATE < TRUNC(SYSDATE);
+ 

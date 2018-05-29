@@ -26,7 +26,6 @@
 	User user = userdao.loginUser(email, password);
 
 	if(user != null){
-		message = "SUCCESSFUL LOGIN";
 		session.setAttribute("user", user);
 		response.sendRedirect("DashBoard.jsp");
 	}else {

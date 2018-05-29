@@ -25,7 +25,7 @@ public class UserChoicesDAO implements UserChoicesDAOI{
 		
 		try {
 			conn = OracleConnection.getConnection();
-			stmt = conn.prepareStatement(OracleQueries.CREATEUSERCHOICES, col);
+			stmt = conn.prepareStatement(OracleQueries.Choices.CREATEUSERCHOICES, col);
 
 			
 			stmt.setInt(1, userid);
@@ -40,11 +40,11 @@ public class UserChoicesDAO implements UserChoicesDAOI{
 			if (result.next())
 			{
 				
-				stmt3 = conn.prepareStatement(OracleQueries.INCQUESTIONSCORE);
+				stmt3 = conn.prepareStatement(OracleQueries.Choices.INCQUESTIONSCORE);
 				stmt3.setInt(1,questionid);
 				stmt3.executeUpdate();
 				
-				stmt2 = conn.prepareStatement(OracleQueries.INCOPTIONSCORE);
+				stmt2 = conn.prepareStatement(OracleQueries.Choices.INCOPTIONSCORE);
 				stmt2.setInt(1, optionid);
 				stmt2.executeUpdate();
 				
@@ -89,7 +89,7 @@ public class UserChoicesDAO implements UserChoicesDAOI{
 		
 		try {
 			conn = OracleConnection.getConnection();
-			stmt = conn.prepareStatement(OracleQueries.UPDATEUSERCHOICES, col);
+			stmt = conn.prepareStatement(OracleQueries.Choices.UPDATEUSERCHOICES, col);
 			
 			stmt.setInt(1, optionid);
 			stmt.setInt(2, userid);
@@ -100,8 +100,8 @@ public class UserChoicesDAO implements UserChoicesDAOI{
 				result = stmt.executeUpdate();
 				
 				if(result > 0) {
-				stmt2 = conn.prepareStatement(OracleQueries.DECOPTIONSCORE);
-				stmt3 = conn.prepareStatement(OracleQueries.INCOPTIONSCORE);
+				stmt2 = conn.prepareStatement(OracleQueries.Choices.DECOPTIONSCORE);
+				stmt3 = conn.prepareStatement(OracleQueries.Choices.INCOPTIONSCORE);
 				
 				
 				stmt2.setInt(1, oldoptionid);
@@ -140,7 +140,7 @@ public class UserChoicesDAO implements UserChoicesDAOI{
 		
 		try {
 			conn = OracleConnection.getConnection();
-			stmt = conn.prepareStatement(OracleQueries.GETUSERCHOICES);
+			stmt = conn.prepareStatement(OracleQueries.Choices.GETUSERCHOICES);
 			stmt.setInt(1, userid);
 			result = stmt.executeQuery();
 			
@@ -167,6 +167,83 @@ public class UserChoicesDAO implements UserChoicesDAOI{
 	}
 	
 	@Override
+	public HashMap<Integer, Integer> getUserChoiceByRank(int userid , int rowOffset) throws SQLException {
+		// TODO Auto-generated method stub
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		HashMap<Integer,Integer>userChoices = new HashMap<Integer,Integer>();
+		ResultSet result = null;
+		
+		try {
+			conn = OracleConnection.getConnection();
+			stmt = conn.prepareStatement(OracleQueries.Choices.GETUSERCHOICESBYRANK);
+			stmt.setInt(1, userid);
+			stmt.setInt(2, rowOffset);
+			result = stmt.executeQuery();
+			
+			while (result.next())
+				userChoices.put(result.getInt(1), result.getInt(2));
+			
+			
+			
+			
+		} catch (ClassNotFoundException | IOException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		if(conn != null)
+			conn.close();
+		if(result != null)
+			result.close();
+		if(stmt != null)
+			stmt.close();
+		
+		
+		return userChoices;
+	}
+	
+	@Override
+	public HashMap<Integer, Integer> getUserChoiceByDate(int userid , int intDateOffset) throws SQLException {
+		// TODO Auto-generated method stub
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		HashMap<Integer,Integer>userChoices = new HashMap<Integer,Integer>();
+		ResultSet result = null;
+		
+		try {
+			conn = OracleConnection.getConnection();
+			stmt = conn.prepareStatement(OracleQueries.Choices.GETUSERCHOICESBYDATE);
+			stmt.setInt(1, userid);
+			stmt.setInt(2, intDateOffset);
+			stmt.setInt(3, intDateOffset);
+			result = stmt.executeQuery();
+			
+			while (result.next())
+				userChoices.put(result.getInt(1), result.getInt(2));
+			
+			
+			
+			
+		} catch (ClassNotFoundException | IOException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		if(conn != null)
+			conn.close();
+		if(result != null)
+			result.close();
+		if(stmt != null)
+			stmt.close();
+		
+		
+		return userChoices;
+	}
+	
+	
+	
+	@Override
 	public int getUserQChoice(int userid, int questionid) throws SQLException {
 		// TODO Auto-generated method stub
 		Connection conn = null;
@@ -176,7 +253,7 @@ public class UserChoicesDAO implements UserChoicesDAOI{
 		
 		try {
 			conn = OracleConnection.getConnection();
-			stmt = conn.prepareStatement(OracleQueries.GETUSERQCHOICES);
+			stmt = conn.prepareStatement(OracleQueries.Choices.GETUSERQCHOICES);
 			stmt.setInt(1, userid);
 			stmt.setInt(2, questionid);
 			result = stmt.executeQuery();

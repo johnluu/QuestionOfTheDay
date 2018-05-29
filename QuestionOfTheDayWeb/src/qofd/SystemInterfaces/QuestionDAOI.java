@@ -9,8 +9,10 @@ import qofd.Models.Question;
 public interface QuestionDAOI {
 
 	
-	public List<Question> getAllQuestion() throws SQLException;
-	public List<Question> getTodaysQuestion() throws SQLException;
-	public Question getQuestion(int question_id) throws SQLException;
+	boolean createNewQuestion(int userid, String questiontext, String[] options) throws SQLException;
+	List<Question> getQuestionByDate(int dateOffset) throws SQLException;
+	List<Question> getQuestionByRank(int rowOffset) throws SQLException;
+	Question getQuestionById(int question_id) throws SQLException;
+	List<Question> getQuestionArchiveByDate(int dateOffset) throws SQLException;
 	
 }

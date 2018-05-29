@@ -4,8 +4,6 @@
 
 <%@ page import = "qofd.Dao.UserDAO" %>
 <%@ page import = "qofd.Dao.UserChoicesDAO" %>
-<%@ page import = "qofd.Dao.UserWatchingDAO" %>
-<%@ page import = "qofd.Dao.NewQuestionDAO" %>
 <%@ page import = "qofd.Dao.QuestionDAO" %>
 <%@ page import = "qofd.Models.Question" %>
 <%@ page import = "qofd.Dao.OptionDAO" %>
@@ -17,6 +15,10 @@
 <%@ page import = "qofd.Models.User" %>
 <%@ page import = "qofd.Models.Option" %>
 <%@ page import = "qofd.Models.Comments" %>
+<%@ page import = "qofd.Dao.UserWatchingDAO" %>
+<%@ page import="java.util.HashSet" %>
+
+
 
 
 
@@ -25,15 +27,17 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Questions</title>
+<link rel="stylesheet" type="text/css" href="style.css">
 </head>
 
 <%! QuestionDAO qDAO = new QuestionDAO();%>
 <%! OptionDAO oDAO = new OptionDAO();%>
 <%! UserChoicesDAO ucDAO = new UserChoicesDAO(); %>
-<%! NewQuestionDAO nqDAO = new NewQuestionDAO(); %>
-<%! UserWatchingDAO uwDAO = new UserWatchingDAO(); %>
+
 <%! CommentDAO cDAO = new CommentDAO(); %>
 <%! UserDAO uDAO = new UserDAO(); %>
+<%! UserWatchingDAO uwDAO = new UserWatchingDAO(); %>
+
 
 
 
@@ -62,7 +66,7 @@
 			Calendar cal = Calendar.getInstance();
 			cal.add(Calendar.DATE, -1);
 			
-			question = qDAO.getQuestion(Integer.parseInt(request.getParameter("question")));
+			question = qDAO.getQuestionById(Integer.parseInt(request.getParameter("question")));
 			String questiondate = monthformat.format(sdf.parse(question.getDate()));
 			String yesterday = monthformat.format(cal.getTime());
 			
@@ -77,20 +81,20 @@
 <body>
 <%@ include file = "Header.jsp" %>
 
-<div class = "maincontainer">
+
+<div class = 'maincontainer'>
+
+<div class = 'leftcontainer'></div>
 
 
-<div class = "leftcontainer"> 
 
-
-</div>
 
 <div class = 'middlecontainer'>
 <h1 class = middlecontainerHeading> <% if(isnew) out.print("New Question"); else out.print("Old Question"); %></h1>
 <% 
 int choice = 0;
 choice = ucDAO.getUserQChoice(user.getUser_id(), question.getQuestion_id());
-options = oDAO.getQuestionOption(question.getQuestion_id());
+options = oDAO.getOptionsByQuestionId(question.getQuestion_id());
 out.print(question.getQuestion_text());
 if(!options.isEmpty())
 {
@@ -170,14 +174,16 @@ if(!options.isEmpty())
 </div>
 
 <div class = "rightcontainer"> 
+<h1 class = 'rightcontainerHeading'> Pending Question</h1>
+<%@ include file = "pendingquestion.jsp" %>
+
+</div>
+
+
 
 
 </div>
 
-
-
-
-</div>
 
 
 
@@ -191,7 +197,6 @@ if(!options.isEmpty())
 
 
 <%} %>
-		
 		
 			
 	

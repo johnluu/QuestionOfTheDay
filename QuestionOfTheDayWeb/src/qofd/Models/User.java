@@ -7,13 +7,19 @@ public class User {
 	private String password;
 	private String first_name;
 	private String last_name;
+	private int watches;
+	private int choices;
+	private int comments;
 	
-	public User(int user_id, String email, String password, String first_name, String last_name) {
+	public User(int user_id, String email, String password, String first_name, String last_name,int watches,int choices,int comments) {
 		this.user_id = user_id;
 		this.email = email;
 		this.password = password;
 		this.first_name = first_name;
 		this.last_name = last_name;
+		this.watches = watches;
+		this.choices = choices;
+		this.comments = comments;
 	}
 	
 	public User() {}

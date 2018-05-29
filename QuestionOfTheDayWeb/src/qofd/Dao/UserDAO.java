@@ -22,7 +22,7 @@ public class UserDAO implements UserDAOI{
 		String[] col = {"user_id"};
 		try {
 			conn = OracleConnection.getConnection();
-			stmt = conn.prepareStatement(OracleQueries.REGISTERUSER,col);
+			stmt = conn.prepareStatement(OracleQueries.User.REGISTERUSER,col);
 			stmt.setString(1, user.getEmail());
 			stmt.setString(2, user.getPassword());
 			stmt.setString(3, user.getFirst_name());
@@ -61,12 +61,13 @@ public class UserDAO implements UserDAOI{
 		
 		try {
 			conn = OracleConnection.getConnection();
-			stmt = conn.prepareStatement(OracleQueries.GETUSERBYEMAIL);
+			stmt = conn.prepareStatement(OracleQueries.User.GETUSERBYEMAIL);
 			stmt.setString(1, email);
 			result = stmt.executeQuery();
 			
 			if(result.next())
-				user = new User(result.getInt(1),result.getString(2),result.getString(3),result.getString(4),result.getString(5));
+				user = new User(result.getInt(1),result.getString(2),result.getString(3),result.getString(4),result.getString(5),result.getInt(6),
+						result.getInt(7),result.getInt(8));
 			
 		} catch (ClassNotFoundException | IOException | SQLException e) {
 			// TODO Auto-generated catch block
@@ -101,12 +102,13 @@ public class UserDAO implements UserDAOI{
 		
 		try {
 			conn = OracleConnection.getConnection();
-			stmt = conn.prepareStatement(OracleQueries.GETUSER);
+			stmt = conn.prepareStatement(OracleQueries.User.GETUSER);
 			stmt.setInt(1, userid);
 			result = stmt.executeQuery();
 			
 			if(result.next())
-				user = new User(result.getInt(1),result.getString(2),result.getString(3),result.getString(4),result.getString(5));
+				user = new User(result.getInt(1),result.getString(2),result.getString(3),result.getString(4),result.getString(5),
+						result.getInt(6),result.getInt(7),result.getInt(8));
 			
 		} catch (ClassNotFoundException | IOException | SQLException e) {
 			// TODO Auto-generated catch block
