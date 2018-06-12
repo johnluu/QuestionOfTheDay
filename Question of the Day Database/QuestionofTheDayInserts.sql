@@ -4,17 +4,17 @@ declare
 y number := 0;
 loop_start Integer := 0;
 begin
-insert into Users (email,password,first_name,last_name)
-values('test','test','john','luu');
+insert into Users (email,password,first_name,last_name,join_date)
+values('test','test','john','luu',sysdate);
 
-    for i in reverse 0..15 loop
+    for i in reverse 1..15 loop
         for j in 1..5 loop
-insert into questions (user_id,question_text,question_date,watches)
-values(1,'How are you my friends'|| (j+(5*y)),sysdate-i,i*j);
+insert into questions (user_id,question_text,question_date,watches,QUESTION_SCORE)
+values(1,'Question'|| (j+(5*y)),sysdate-i,i*j,j);
 
 
-            insert into options(question_id,option_text)
-            values(j+(5*y),'Good');
+            insert into options(question_id,option_text,OPTION_SCORE)
+            values(j+(5*y),'Good',j);
             insert into options(question_id,option_text)
             values(j+(5*y),'bad');
             insert into options(question_id,option_text)
@@ -25,6 +25,55 @@ end loop;
 commit;
 end;
 
+declare
+
+begin
+
+    for i in 76..120 loop
+      
+insert into questions (user_id,question_text,question_date)
+values(1,'Pending Question' || (i),(SYSDATE - 5 / 24 /60 /* Minutes */));
+
+            insert into options(question_id,option_text)
+            values((i),'Good');
+            insert into options(question_id,option_text)
+            values((i),'bad');
+            insert into options(question_id,option_text)
+            values((i),'sad');
+end loop;
+commit;
+end;
+
+
+
+
+
+                            DELETE FROM USER_WATCHING;
+   
+                      
+                          
+   
+                            DELETE FROM OPTIONS WHERE OPTION_ID IN(
+                            select OPTIONS.OPTION_ID from OPTIONS join questions on questions.question_id = options.question_id 
+                            where questions.question_date >= trunc(sysdate)- 1
+                            and options.QUESTION_ID NOT in 
+                            (select question_id from questions
+                            where QUESTIONS.QUESTION_DATE >= trunc(sysdate) - 1
+                            order by watches desc, question_date asc
+                            fetch first 5 rows only));
+
+                            delete from questions where question_date >= trunc(sysdate)- 1 and question_id not in(
+                            select question_id from questions
+                            where QUESTIONS.QUESTION_DATE >= trunc(sysdate)- 1
+                            order by watches desc, question_date asc
+                            fetch first 5 rows only);
+                            commit;
+
+
+
+
+SELECT OPTION_ID FROM USER_CHOICES 
+			where USER_ID = 1 and QUESTION_ID = 71;
 
 select * from questions;
 --insert into questions (user_id,question_text,question_date,watches)

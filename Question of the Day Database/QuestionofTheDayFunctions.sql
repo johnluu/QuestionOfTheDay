@@ -124,58 +124,35 @@ select * from new_OPTIONS where question_id = 11;
 begin
   dbms_scheduler.create_job
   (
-   job_name             => 'UPDATE_TABLE',
-   job_type             => 'PLSQL_BLOCK',
-   job_action           => 'begin
-                            INSERT INTO QUESTIONS(QUESTION_ID,USER_ID,QUESTION_TEXT,WATCHES,QUESTION_DATE)
-                            select QUESTION_ID,USER_ID,QUESTION_TEXT,WATCHES,QUESTION_DATE from new_questions
-                            order by watches desc, question_date asc
-                            fetch first 5 rows only;
-
-                            INSERT INTO OPTIONS(OPTION_ID,QUESTION_ID,OPTION_TEXT)
-                            select OPTION_ID,QUESTION_ID,OPTION_TEXT from new_options
-                            where QUESTION_ID in (select QUESTION_ID from new_questions
-                            order by watches desc, question_date asc
-                            fetch first 5 rows only);
-
-                            delete from new_options;
-                            delete from user_watching;
-                            delete from new_questions;
-                            commit; end;',
-                            
-   start_date           =>  trunc(sysdate+1),
-   repeat_interval      => 'FREQ=DAILY;BYHOUR=0;BYMINUTE=0',
-   enabled              => TRUE,
-   auto_drop            => FALSE
-  );
-end;
-
-begin
-  dbms_scheduler.create_job
-  (
    job_name             => 'DELETE_PENDING',
    job_type             => 'PLSQL_BLOCK',
    job_action           => 'begin
    
+
                             DELETE FROM USER_WATCHING;
+                            
+                            DELETE FROM USER_CHOICES WHERE QUESTION_ID IN(
+                            select question_id from questions
+                            where QUESTIONS.QUESTION_DATE >= trunc(sysdate)- 1
+                            );
    
                             DELETE FROM OPTIONS WHERE OPTION_ID IN(
                             select OPTIONS.OPTION_ID from OPTIONS join questions on questions.question_id = options.question_id 
-                            where questions.question_date >= trunc(sysdate)
+                            where questions.question_date >= trunc(sysdate)- 1
                             and options.QUESTION_ID NOT in 
                             (select question_id from questions
-                            where QUESTIONS.QUESTION_DATE >= trunc(sysdate)
+                            where QUESTIONS.QUESTION_DATE >= trunc(sysdate) - 1
                             order by watches desc, question_date asc
                             fetch first 5 rows only));
 
                             delete from questions where question_date >= trunc(sysdate) and question_id not in(
                             select question_id from questions
-                            where QUESTIONS.QUESTION_DATE >= trunc(sysdate)
+                            where QUESTIONS.QUESTION_DATE >= trunc(sysdate)- 1
                             order by watches desc, question_date asc
                             fetch first 5 rows only);
                             commit; end;',
                             
-   start_date           =>  trunc(sysdate+1),
+   start_date           =>  trunc(sysdate+1) + INTERVAL '1' SECOND ,
    repeat_interval      => 'FREQ=DAILY;BYHOUR=0;BYMINUTE=0',
    enabled              => TRUE,
    auto_drop            => FALSE
@@ -190,7 +167,7 @@ begin
    job_type             => 'PLSQL_BLOCK',
    job_action           => 'begin
    
-                           delete from comments where comments.comment_id in(
+                             delete from comments where comments.comment_id in(
                             select comments.comment_id from comments join questions on comments.question_id = questions.question_id
                             where question_date < trunc(sysdate-14));
 
@@ -207,8 +184,8 @@ begin
                             DELETE from questions where question_date < trunc(sysdate-14);
                             commit; end;',
                             
-   start_date           =>  trunc(sysdate+1),
-   repeat_interval      => 'FREQ=DAILY;BYHOUR=0;BYMINUTE=0',
+   start_date           =>  trunc(sysdate+1)  - INTERVAL '1' Second,
+   repeat_interval      => 'FREQ=DAILY;BYHOUR=23;BYMINUTE=59',
    enabled              => TRUE,
    auto_drop            => FALSE
   );
@@ -218,6 +195,7 @@ EXEC  DBMS_SCHEDULER.ENABLE('update_table');
 EXEC  DBMS_SCHEDULER.ENABLE('DELETE_PENDING');
 EXEC  DBMS_SCHEDULER.ENABLE('DELETE_ARCHIVE');
 
+EXEC DBMS_SCHEDULER.drop_job(job_name => 'UPDATE_TABLE');
 EXEC DBMS_SCHEDULER.drop_job(job_name => 'DELETE_PENDING');
 EXEC DBMS_SCHEDULER.drop_job(job_name => 'DELETE_ARCHIVE');
 
@@ -228,7 +206,7 @@ GRANT SELECT ON SYS.DBA_JOBS_RUNNING TO john;
 
 SELECT * FROM dba_scheduler_jobs; --ONLY DBA CAN USE THIS ONE
 SELECT JOB_NAME,START_DATE,NEXT_RUN_DATE,RUN_COUNT,FAILURE_COUNT,REPEAT_INTERVAL,JOB_ACTION FROM user_scheduler_jobs;
-
+select * from  user_scheduler_jobs;
 
 
 commit;
@@ -292,3 +270,36 @@ fetch next 5 rows only);
 select *  from Questions where QUESTION_DATE >= trunc(sysdate)-7 and QUESTION_DATE < TRUNC(SYSDATE);
 select COUNT(*)  from Questions where QUESTION_DATE >= trunc(sysdate)-7 and QUESTION_DATE < TRUNC(SYSDATE);
  
+SELECT COUNT(*)
+FROM USER_WATCHING;
+
+select * from questions 
+			where QUESTION_DATE >= trunc(sysdate)
+			order by  question_date Desc
+      offset ((14-1)*5) rows 
+			fetch first 5 rows only;
+
+	
+  select * from questions 
+			where QUESTION_DATE >= trunc(sysdate);
+      
+      select * from questions 
+			where question_date >= (trunc(sysdate) - 1) and question_date < trunc(sysdate)- (1-1) 
+			order by question_score desc, question_date asc
+      
+      SELECT  (
+        SELECT COUNT(*)
+        FROM   questions
+        where user_id = 2
+        ) AS created_question,
+        (
+        SELECT COUNT(*)
+        FROM   user_choices
+        where user_id = 2
+        ) AS user_following,
+        (
+        SELECT COUNT(*)
+        FROM   user_watching
+        where user_id = 2
+        ) AS user_watching
+        FROM    dual
