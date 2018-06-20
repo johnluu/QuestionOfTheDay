@@ -6,7 +6,8 @@ import java.util.HashSet;
 public interface UserWatchingDAOI {
 
 	public int watch(int userid, int questionid) throws SQLException;
-	public int unwatch(int userid, int questionid);
-	public HashSet<Integer> isWatching(int userid);
+	public boolean unwatch(int userid, int questionid) throws SQLException;
+	public HashSet<Integer> isWatching(int userid) throws SQLException;
+	public Integer getWatchCount() throws SQLException;
 	
 }

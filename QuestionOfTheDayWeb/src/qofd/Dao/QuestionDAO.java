@@ -51,40 +51,7 @@ public class QuestionDAO implements QuestionDAOI {
 		return Questions;
 	}
 	
-	@Override
-	public List<Question> getQuestionArchiveByDate(int dateOffset) throws SQLException {
 
-		Connection conn = null;
-		PreparedStatement stmt = null;
-		ResultSet result = null;
-		List<Question> Questions = new ArrayList<Question>();
-		
-		try {
-			conn = OracleConnection.getConnection();
-			stmt = conn.prepareStatement(OracleQueries.Question.GETQUESTIONARCHIVEBYDATE);
-			stmt.setInt(1, dateOffset);
-			stmt.setInt(2, dateOffset);
-			result = stmt.executeQuery();
-			
-			while(result.next())
-			{
-				Questions.add(new Question(result.getInt(1),result.getInt(2),result.getString(3),result.getInt(4),result.getInt(5),result.getString(6)));
-			}
-			
-		} catch (ClassNotFoundException | IOException | SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		if(conn != null)
-			conn.close();
-		if(result != null)
-			result.close();
-		if(stmt != null)
-			stmt.close();
-		
-		return Questions;
-	}
 	
 	
 	@Override
@@ -120,6 +87,180 @@ public class QuestionDAO implements QuestionDAOI {
 		
 		return Questions;
 	}
+	
+	@Override
+	public List<Question> getArchiveQuestionByRank(int rowOffset) throws SQLException {
+
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet result = null;
+		List<Question> Questions = new ArrayList<Question>();
+		
+		try {
+			conn = OracleConnection.getConnection();
+			stmt = conn.prepareStatement(OracleQueries.Question.GETQUESTIONARCHIVEBYRANK);
+			stmt.setInt(1, rowOffset);
+			result = stmt.executeQuery();
+			
+			while(result.next())
+			{
+				Questions.add(new Question(result.getInt(1),result.getInt(2),result.getString(3),result.getInt(4),result.getInt(5),result.getString(6)));
+			}
+			
+		} catch (ClassNotFoundException | IOException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		if(conn != null)
+			conn.close();
+		if(result != null)
+			result.close();
+		if(stmt != null)
+			stmt.close();
+		
+		return Questions;
+	}
+	
+	@Override
+	public List<Question> getPendingByDate(int rowOffset) throws SQLException {
+
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet result = null;
+		List<Question> Questions = new ArrayList<Question>();
+		
+		try {
+			conn = OracleConnection.getConnection();
+			stmt = conn.prepareStatement(OracleQueries.Question.GETPENDINGQUESTIONBYDATE);
+			stmt.setInt(1, rowOffset);
+			result = stmt.executeQuery();
+			
+			while(result.next())
+			{
+				Questions.add(new Question(result.getInt(1),result.getInt(2),result.getString(3),result.getInt(4),result.getInt(5),result.getString(6)));
+			}
+			
+		} catch (ClassNotFoundException | IOException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		if(conn != null)
+			conn.close();
+		if(result != null)
+			result.close();
+		if(stmt != null)
+			stmt.close();
+		
+		return Questions;
+	}
+	
+	@Override
+	public List<Question> getPendingByRank(int rowOffset) throws SQLException {
+
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet result = null;
+		List<Question> Questions = new ArrayList<Question>();
+		
+		try {
+			conn = OracleConnection.getConnection();
+			stmt = conn.prepareStatement(OracleQueries.Question.GETPENDINGQUESTIONBYRANK);
+			stmt.setInt(1, rowOffset);
+			result = stmt.executeQuery();
+			
+			while(result.next())
+			{
+				Questions.add(new Question(result.getInt(1),result.getInt(2),result.getString(3),result.getInt(4),result.getInt(5),result.getString(6)));
+			}
+			
+		} catch (ClassNotFoundException | IOException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		if(conn != null)
+			conn.close();
+		if(result != null)
+			result.close();
+		if(stmt != null)
+			stmt.close();
+		
+		return Questions;
+	}
+	
+	@Override
+	public List<Question> getFollowingQuestionsByDate(int userid, int rowOffset) throws SQLException {
+
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet result = null;
+		List<Question> Questions = new ArrayList<Question>();
+		
+		try {
+			conn = OracleConnection.getConnection();
+			stmt = conn.prepareStatement(OracleQueries.Question.GETFOLLOWINGQUESTIONSBYDATE);
+			stmt.setInt(1, userid);
+			stmt.setInt(2, rowOffset);
+			result = stmt.executeQuery();
+			
+			while(result.next())
+			{
+				Questions.add(new Question(result.getInt(1),result.getInt(2),result.getString(3),result.getInt(4),result.getInt(5),result.getString(6)));
+			}
+			
+		} catch (ClassNotFoundException | IOException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		if(conn != null)
+			conn.close();
+		if(result != null)
+			result.close();
+		if(stmt != null)
+			stmt.close();
+		
+		return Questions;
+	}
+	
+	
+	@Override
+	public List<Question> getFollowingQuestionsByRank(int userid, int rowOffset) throws SQLException {
+
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet result = null;
+		List<Question> Questions = new ArrayList<Question>();
+		
+		try {
+			conn = OracleConnection.getConnection();
+			stmt = conn.prepareStatement(OracleQueries.Question.GETFOLLOWINGQUESTIONSBYRANK);
+			stmt.setInt(1, userid);
+			stmt.setInt(2, rowOffset);
+			result = stmt.executeQuery();
+			
+			while(result.next())
+			{
+				Questions.add(new Question(result.getInt(1),result.getInt(2),result.getString(3),result.getInt(4),result.getInt(5),result.getString(6)));
+			}
+			
+		} catch (ClassNotFoundException | IOException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		if(conn != null)
+			conn.close();
+		if(result != null)
+			result.close();
+		if(stmt != null)
+			stmt.close();
+		
+		return Questions;
+	}
+	
 
 	@Override
 	public Question getQuestionById(int question_id) throws SQLException {
@@ -158,15 +299,15 @@ public class QuestionDAO implements QuestionDAOI {
 
 	
 	@Override
-	public boolean createNewQuestion(int userid, String questiontext,String[] options) throws SQLException {
+	public int createNewQuestion(int userid, String questiontext) throws SQLException {
 
 		
 		Connection conn = null;
 		PreparedStatement stmt = null;
+		PreparedStatement stmt2 = null;
 		ResultSet result = null;
 		Integer id = null;
 		String col[] = {"question_id"};
-		
 		try {
 			
 			conn = OracleConnection.getConnection();
@@ -175,17 +316,18 @@ public class QuestionDAO implements QuestionDAOI {
 			stmt.setString(2, questiontext);
 			stmt.executeUpdate();
 			result = stmt.getGeneratedKeys();
+			
 			if(result.next())
+			
+			
 			{
 				id = result.getInt(1);
-				System.out.println(id);
+				stmt2 = conn.prepareStatement(OracleQueries.Question.INCUSERCREATED);
+				stmt2.setInt(1, userid);
+				stmt2.executeUpdate();
 			}
-			OptionDAO opDAO = new OptionDAO();
 			
-			for(String s: options)
-			{	System.out.println("inserting into " + id);
-				opDAO.createOption(id, s);
-			}
+
 			
 		} catch (ClassNotFoundException | IOException | SQLException e) {
 			// TODO Auto-generated catch block
@@ -199,7 +341,69 @@ public class QuestionDAO implements QuestionDAOI {
 		if(stmt != null)
 			stmt.close();
 		
-		return false;
+		return id;
+	}
+	
+	@Override
+	public int getPendingCount() throws SQLException {
+
+		
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet result = null;
+		int pendingcount = 0;
+
+		try {
+			
+			conn = OracleConnection.getConnection();
+			stmt = conn.prepareStatement(OracleQueries.Question.GETPENDINGCOUNT);
+			result = stmt.executeQuery();
+			
+			if(result.next())
+				pendingcount = result.getInt(1);
+				
+		} catch (ClassNotFoundException | IOException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		if(conn != null)
+			conn.close();
+		if(result != null)
+			result.close();
+		if(stmt != null)
+			stmt.close();
+		
+		return pendingcount;
+	}
+	
+	@Override
+	public boolean deleteQuestion(int questionid) throws SQLException {
+
+		
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		int deleted = 0;
+		try {
+			
+			conn = OracleConnection.getConnection();
+			stmt = conn.prepareStatement(OracleQueries.Question.DELETEQUESTION);
+			stmt.setInt(1, questionid);
+			deleted = stmt.executeUpdate();
+			
+
+			
+		} catch (ClassNotFoundException | IOException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		if(conn != null)
+			conn.close();
+		if(stmt != null)
+			stmt.close();
+		
+		 return deleted>0;
 	}
 	
 }

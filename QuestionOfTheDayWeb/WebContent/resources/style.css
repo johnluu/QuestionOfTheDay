@@ -1,0 +1,428 @@
+
+a, u {
+    text-decoration: none;
+    color: inherit;
+}
+
+.archive
+{
+	color: red;
+	width: 100%:
+	
+}
+
+.homeleft h2
+{
+	margin-bottom: 0;
+	
+}
+
+
+.pending
+{
+	color: purple;
+	width: 100%:
+}
+
+.current
+{
+	color: green;
+	width: 100%:
+	
+}
+
+
+
+.registerform
+{
+	
+}
+
+.containerrightheader{
+	float:right;
+	margin-top: 10px
+}
+
+
+.containerleftheader{
+	float:left;
+	margin-top: 10px
+}
+
+
+
+html, body{
+	margin: 0;
+}
+
+
+
+.container{
+	
+	height:100%;
+	width:100%;
+	display: flex;
+ 	flex-direction: column;
+}
+
+.footer{
+	
+	height: 6vh;
+	background-color: rgb(204, 204, 204);
+}
+
+
+.header{
+	display: flex;
+	height: 8vh;
+	background-color: rgb(204, 204, 204);
+	flex-direction: row;
+	width: 100%;
+	
+	
+}
+
+
+.logocontainer{
+	
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  width:85px;
+  
+	
+}
+
+.logo{
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  width:100%;
+}
+
+.logoimage{
+	height: 40%;
+	  width:100%;
+	
+}
+
+.logotext{
+	width: 100%;
+	height: 30%;
+	font-color: black;
+	
+}
+
+.logotext h1{
+	font-style: italic;
+	font-size: 1em;
+	margin:0;
+	text-align: center;
+
+}
+
+.homeleft{
+	margin-left: 10%;
+	margin-right:5%;
+	display: flex;
+	width: 35%;
+	flex-direction: column;
+	
+}
+
+.homeright{
+	margin-left:5%;
+	margin-right:10%;
+	display: flex;
+	width: 35%;
+	flex-direction: column;
+}
+
+.navbar{
+  display: flex;
+  height: 100%;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+  width:50%;
+  margin-left:45%;
+}
+
+
+.logincontainer{
+  display: flex;
+  height: 100%;
+  width: 100%;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.logininput{
+  height: 50px;
+}
+
+
+
+.logininput div
+{
+	font-size:20px;
+}
+
+
+.logininput input{
+  height: 20px;
+  font-size:20px;
+}
+
+.loginsubmit{
+	 height: 30px;
+	   margin-top: 20px;
+	   margin-bottom: 0;
+	 
+}
+
+.icon{
+	width:100px;
+	height:50px;
+}
+
+.followicon{
+	width:24px;
+	height:24px;
+}
+
+.followbutton{
+	outline: none;
+	border: none;
+	background-color:inherit;
+	padding:0;
+	margin:0;
+	
+}
+
+.followingcontainer
+{
+	vertical-align: middle;
+	height:24px;
+	width: 100%;
+	font-size: 24px;
+}
+
+
+.createquestionform
+{
+	
+}
+
+.createformtext
+{
+	resize: none;
+	width:100%;
+	height:100px;
+	padding:0;
+	margin:0;
+	border:0;
+}
+
+.maincontainer{
+	display: flex;
+	flex-direction: row;
+	height:86vh;
+	overflow: auto;
+}
+
+
+.leftcontainer{
+	width: calc(20% - 2px);
+	height:500px;
+}
+
+.inner{
+	display: flex;
+	width: 100%;
+	height:100%;
+	flex-direction: column;
+	background-color: rgb(239, 230, 230);
+	border-style: solid;
+	border-width: thin;
+}
+
+
+
+.rightcontainer{
+	width: calc(20% - 2px);
+	height:500px;
+	
+}
+
+
+.middlecontainer{
+	display: flex;
+	width: 60%;
+	flex-direction: column;
+	
+}
+
+.subcontainerHeading
+{	text-align: center;
+	width: 100%;
+	height: 70px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	height: 50px;
+}
+
+.middlecontainerHeading
+{	text-align: center;
+	width: 100%;
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+
+
+
+
+
+.Questionformcontainer
+{
+	width: 60%;
+	margin: 0% 20% 0% 20%;
+	border-style: solid;
+	border-width: thin;
+	 
+}
+
+.QuestionformHeader
+{
+	height: 54px;
+	margin-bottom: 10px;
+	
+}
+
+
+.QuestionTextHeader
+{
+	height:30px;
+	font-size: 15px;
+}
+
+.QuestionTextContainer
+{
+	 margin-bottom: 5%;
+
+}
+
+.QuestionTextContainer p
+{
+	 font-size: 15px;
+}
+
+.CommentFormText
+{
+	resize: none;
+	width:100%;
+	height:100px;
+	padding:0;
+	margin:0;
+	
+}
+
+.CommentContainer
+{
+	width: 60%;
+	margin: 7% 20% 0% 20%;
+}
+
+.CommentElement
+{
+	border-style: solid;
+	border-width: thin;
+	margin-bottom: 5%;
+}
+
+
+.CommentElement p
+{
+	font-size: 15px;
+	
+}
+
+
+
+.QuestionChoiceContainer
+{
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	
+	
+}
+
+.QuestionChoices
+{
+	width:25%;
+}
+
+.SubQuestionformcontainer
+{
+	height: 17%;
+	width: 100%;
+	overflow:hidden;
+	 
+}
+
+.createQuestionText
+{
+	width: 100%;
+	word-wrap: break-word;
+}
+
+
+#chart_div
+{
+	width: 400;
+	height:400;
+
+}
+
+.dropbtn {
+ 
+}
+
+.dropbtn:hover{
+    cursor: -webkit-pointer; 
+    cursor: pointer;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f1f1f1;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+
+.Informationdiv{
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+}
+
+.Informationdiv p{
+	font-size: 15px;
+	margin-bottom: 14px;
+}
+
+
+
+
+.show {display:block;}

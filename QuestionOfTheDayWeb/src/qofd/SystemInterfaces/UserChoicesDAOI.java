@@ -12,6 +12,9 @@ public interface UserChoicesDAOI {
 	public int getUserQChoice(int userid, int questionid) throws SQLException;
 	HashMap<Integer, Integer> getUserChoiceByRank(int userid , int rowOffset) throws SQLException;
 	HashMap<Integer, Integer> getUserChoiceByDate(int userid, int intDateOffset) throws SQLException;
+	boolean deleteUserChoice(int userid, int questionid, int optionid) throws SQLException;
+	int getFollowing(int userid) throws SQLException;
+	int getArchiveFollowing(int userid) throws SQLException;
 
 	
 }

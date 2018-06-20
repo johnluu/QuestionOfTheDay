@@ -25,7 +25,7 @@ public class CommentDAO implements CommentDAOI {
 			
 			try {
 				conn = OracleConnection.getConnection();
-				stmt = conn.prepareStatement(OracleQueries.GETQUESTIONCOMMENT);
+				stmt = conn.prepareStatement(OracleQueries.Comments.GETQUESTIONCOMMENT);
 				stmt.setInt(1, questionid);
 				result = stmt.executeQuery();
 				
@@ -56,12 +56,13 @@ public class CommentDAO implements CommentDAOI {
 		
 		Connection conn = null;
 		PreparedStatement stmt = null;
+		PreparedStatement stmt2 = null;
 		ResultSet result = null;
 		int id = 0;
 		String[] col = {"comment_id"};
 		try {
 			conn = OracleConnection.getConnection();
-			stmt = conn.prepareStatement(OracleQueries.CREATECOMMENT,col);
+			stmt = conn.prepareStatement(OracleQueries.Comments.CREATECOMMENT,col);
 			stmt.setInt(1, comment.getUser_id());
 			stmt.setInt(2, comment.getQuestion_id());
 			stmt.setInt(3, comment.getOption_id());
@@ -71,7 +72,12 @@ public class CommentDAO implements CommentDAOI {
 			result = stmt.getGeneratedKeys();
 			
 			if(result.next())
+			{
 				id = result.getInt(1);
+				stmt2 = conn.prepareStatement(OracleQueries.Comments.INCUSERCOMMENTS);
+				stmt2.setInt(1,comment.getUser_id());
+				stmt2.executeUpdate();
+			}
 			
 		} catch (ClassNotFoundException | IOException | SQLException e) {
 
@@ -84,9 +90,37 @@ public class CommentDAO implements CommentDAOI {
 			result.close();
 		if(stmt != null)
 			stmt.close();
-		
+		if(stmt2 != null)
+			stmt2.close();
 
 		return id;
+		
+	}
+	
+	@Override
+	public boolean deleteComment(int commentid) throws SQLException {
+		
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		int result = 0;
+		try {
+			conn = OracleConnection.getConnection();
+			stmt = conn.prepareStatement(OracleQueries.Comments.DELETECOMMENT);
+			stmt.setInt(1, commentid);
+			result = stmt.executeUpdate();
+			
+			
+		} catch (ClassNotFoundException | IOException | SQLException e) {
+
+			e.printStackTrace();
+		}
+		if(conn != null)
+			conn.close();
+		if(stmt != null)
+			stmt.close();
+		
+
+		return result > 0;
 		
 	}
 

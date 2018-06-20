@@ -5,14 +5,12 @@ y number := 0;
 loop_start Integer := 0;
 begin
 insert into Users (email,password,first_name,last_name,join_date)
-values('test','test','john','luu',sysdate);
+values('test@gmail.com','test','john','luu',sysdate);
 
-    for i in reverse 1..15 loop
+    for i in reverse 1..14 loop
         for j in 1..5 loop
 insert into questions (user_id,question_text,question_date,watches,QUESTION_SCORE)
 values(1,'Question'|| (j+(5*y)),sysdate-i,i*j,j);
-
-
             insert into options(question_id,option_text,OPTION_SCORE)
             values(j+(5*y),'Good',j);
             insert into options(question_id,option_text)
@@ -22,27 +20,29 @@ values(1,'Question'|| (j+(5*y)),sysdate-i,i*j,j);
     end loop;
      y:= y+1;
 end loop;
-commit;
-end;
-
-declare
-
-begin
-
-    for i in 76..120 loop
-      
-insert into questions (user_id,question_text,question_date)
-values(1,'Pending Question' || (i),(SYSDATE - 5 / 24 /60 /* Minutes */));
-
+ for i in 71..110 loop
+insert into questions (user_id,question_text,question_date,watches)
+values(1,'Pending Question' || (i),(SYSDATE - 5 / 24 /60 /* Minutes */),1);
             insert into options(question_id,option_text)
             values((i),'Good');
             insert into options(question_id,option_text)
             values((i),'bad');
             insert into options(question_id,option_text)
-            values((i),'sad');
+            values((i),'sad');  
+insert into user_watching(question_id,user_id)
+values(i,1);
 end loop;
+    for i in 1..70 loop
+insert into USER_CHOICES (question_id,user_id,option_id)
+values(i,1,((i*3)-2));
+end loop;
+
+UPDATE USERS SET CHOICES = 70 WHERE USER_ID = 1;
+UPDATE USERS SET QUESTIONS_CREATED = 110 WHERE USER_ID = 1;
+UPDATE USERS SET watches = 40 WHERE USER_ID = 1;
 commit;
 end;
+
 
 
 
@@ -387,3 +387,95 @@ where QUESTION_DATE < trunc(sysdate) and QUESTION_DATE >= trunc(sysdate)-7
 order by watches desc, question_date asc
 offset (0*5) rows
 fetch next 5 rows only;
+
+select QUESTIONs.* from questions join user_choices on questions.question_id = user_Choices.question_id where
+user_choices.USER_ID = 2 and QUESTIONS.QUESTION_DATE < trunc(sysdate)
+order by question_date DESC
+fetch next 5 rows only;
+
+select QUESTIONs.* from questions join user_choices on questions.question_id = user_Choices.question_id where
+user_choices.USER_ID = 2 and QUESTIONS.QUESTION_DATE < trunc(sysdate)
+order by QUESTIONS.QUESTION_SCORE DESC, QUESTIONS.QUESTION_DATE ASC
+offset ((2-1)*5) rows
+fetch next 5 rows only;
+
+select options.* from options join questions on options.question_id = questions.question_id
+where options.question_id in (
+select QUESTIONs.question_id from questions join user_choices on questions.question_id = user_Choices.question_id where
+user_choices.USER_ID = 2 and QUESTIONS.QUESTION_DATE < trunc(sysdate)
+order by QUESTIONS.QUESTION_SCORE DESC, QUESTIONS.QUESTION_DATE ASC
+offset ((2-1)*5) rows
+fetch next 5 rows only);
+
+
+                select options.* from options join questions on 
+                options.question_id = questions.question_id
+				where options.question_id in (
+				select QUESTIONs.question_id 
+                from questions join user_choices on 
+                questions.question_id = user_Choices.question_id 
+                where user_choices.USER_ID = 2 and QUESTIONS.QUESTION_DATE < trunc(sysdate)
+				order by QUESTIONS.QUESTION_SCORE DESC, QUESTIONS.QUESTION_DATE ASC
+				offset ((2-1)*5) rows
+				fetch next 5 rows only)
+                
+                select count(*)  from Questions JOIN USER_CHOICES on questions.question_id = user_choices.question_id
+                where QUESTIONS.QUESTION_DATE >= trunc(sysdate)-7 and  QUESTIONS.QUESTION_DATE <= trunc(sysdate)
+                and USER_CHOICES.user_id = 1;
+                
+                select count(*)  from Questions JOIN USER_CHOICES on questions.question_id = user_choices.question_id
+                where QUESTIONS.QUESTION_DATE < trunc(sysdate)-7
+                and USER_CHOICES.user_id = 1;
+                
+                
+                
+                            delete from comments where comments.comment_id in(
+                            select comments.comment_id from comments join questions on comments.question_id = questions.question_id
+                            where question_date < trunc(sysdate-13));
+
+
+                            DELETE FROM USER_CHOICES WHERE QUESTION_ID IN(
+                            SELECT QUESTIONS.QUESTION_ID FROM USER_CHOICES JOIN QUESTIONS ON USER_CHOICES.QUESTION_ID = QUESTIONS.QUESTION_ID
+                            WHERE QUESTION_DATE < TRUNC(SYSDATE-13));
+
+                            DELETE FROM OPTIONS WHERE OPTIONS.OPTION_ID IN(
+                            SELECT OPTIONS.OPTION_ID FROM OPTIONS JOIN QUESTIONS ON OPTIONS.QUESTION_ID = QUESTIONS.QUESTION_ID
+                            WHERE QUESTION_DATE < TRUNC(SYSDATE-13));
+
+
+                            DELETE from questions where question_date < trunc(sysdate-13);
+                            commit;
+                            
+            select QUESTIONs.* from questions join user_choices on questions.question_id = user_Choices.question_id where
+			user_choices.USER_ID = 1 and QUESTIONS.QUESTION_DATE <= trunc(sysdate)
+			 order by QUESTIONS.QUESTION_DATE DESC, QUESTIONS.QUESTION_SCORE DESC
+			 offset ((1-1)*5) rows 
+			 fetch first 5 rows only
+             
+             select distinct users.*  from users join questions on users.user_id = questions.user_id
+             where questions.question_id  in(
+              select questions.question_id from questions
+			where QUESTION_DATE >= trunc(sysdate)
+			order by  watches Desc 
+			offset ((1-1)*5) rows
+            fetch first 5 rows only);
+            
+            
+            
+            
+                              delete from comments where comments.comment_id in(
+                            select comments.comment_id from comments join questions on comments.question_id = questions.question_id
+                            where question_date < trunc(sysdate-13));
+
+
+                            DELETE FROM USER_CHOICES WHERE QUESTION_ID IN(
+                            SELECT QUESTIONS.QUESTION_ID FROM USER_CHOICES JOIN QUESTIONS ON USER_CHOICES.QUESTION_ID = QUESTIONS.QUESTION_ID
+                            WHERE QUESTION_DATE < TRUNC(SYSDATE-13));
+
+                            DELETE FROM OPTIONS WHERE OPTIONS.OPTION_ID IN(
+                            SELECT OPTIONS.OPTION_ID FROM OPTIONS JOIN QUESTIONS ON OPTIONS.QUESTION_ID = QUESTIONS.QUESTION_ID
+                            WHERE QUESTION_DATE < TRUNC(SYSDATE-13));
+
+
+                            DELETE from questions where question_date < trunc(sysdate-13);
+                            commit; 

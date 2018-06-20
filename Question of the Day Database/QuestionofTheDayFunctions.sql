@@ -128,7 +128,7 @@ begin
    job_type             => 'PLSQL_BLOCK',
    job_action           => 'begin
    
-
+   
                             DELETE FROM USER_WATCHING;
                             
                             DELETE FROM USER_CHOICES WHERE QUESTION_ID IN(
@@ -145,15 +145,15 @@ begin
                             order by watches desc, question_date asc
                             fetch first 5 rows only));
 
-                            delete from questions where question_date >= trunc(sysdate) and question_id not in(
+                            delete from questions where question_date >= trunc(sysdate)-1 and question_id not in(
                             select question_id from questions
                             where QUESTIONS.QUESTION_DATE >= trunc(sysdate)- 1
                             order by watches desc, question_date asc
                             fetch first 5 rows only);
                             commit; end;',
                             
-   start_date           =>  trunc(sysdate+1) + INTERVAL '1' SECOND ,
-   repeat_interval      => 'FREQ=DAILY;BYHOUR=0;BYMINUTE=0',
+   start_date           =>  TRUNC(SYSDATE + 1) + 180/(24*60*60) ,
+   repeat_interval      => 'FREQ=DAILY;',
    enabled              => TRUE,
    auto_drop            => FALSE
   );
@@ -167,25 +167,25 @@ begin
    job_type             => 'PLSQL_BLOCK',
    job_action           => 'begin
    
-                             delete from comments where comments.comment_id in(
+                            delete from comments where comments.comment_id in(
                             select comments.comment_id from comments join questions on comments.question_id = questions.question_id
-                            where question_date < trunc(sysdate-14));
+                            where question_date < trunc(sysdate-13));
 
 
                             DELETE FROM USER_CHOICES WHERE QUESTION_ID IN(
                             SELECT QUESTIONS.QUESTION_ID FROM USER_CHOICES JOIN QUESTIONS ON USER_CHOICES.QUESTION_ID = QUESTIONS.QUESTION_ID
-                            WHERE QUESTION_DATE < TRUNC(SYSDATE-14));
+                            WHERE QUESTION_DATE < TRUNC(SYSDATE-13));
 
                             DELETE FROM OPTIONS WHERE OPTIONS.OPTION_ID IN(
                             SELECT OPTIONS.OPTION_ID FROM OPTIONS JOIN QUESTIONS ON OPTIONS.QUESTION_ID = QUESTIONS.QUESTION_ID
-                            WHERE QUESTION_DATE < TRUNC(SYSDATE-14));
+                            WHERE QUESTION_DATE < TRUNC(SYSDATE-13));
 
 
-                            DELETE from questions where question_date < trunc(sysdate-14);
+                            DELETE from questions where question_date < trunc(sysdate-13);
                             commit; end;',
                             
-   start_date           =>  trunc(sysdate+1)  - INTERVAL '1' Second,
-   repeat_interval      => 'FREQ=DAILY;BYHOUR=23;BYMINUTE=59',
+   start_date           =>  trunc(sysdate + 1) - 180/(24*60*60) ,
+   repeat_interval      => 'FREQ=DAILY;',
    enabled              => TRUE,
    auto_drop            => FALSE
   );
@@ -206,6 +206,11 @@ GRANT SELECT ON SYS.DBA_JOBS_RUNNING TO john;
 
 SELECT * FROM dba_scheduler_jobs; --ONLY DBA CAN USE THIS ONE
 SELECT JOB_NAME,START_DATE,NEXT_RUN_DATE,RUN_COUNT,FAILURE_COUNT,REPEAT_INTERVAL,JOB_ACTION FROM user_scheduler_jobs;
+
+select *
+from all_scheduler_job_run_details
+where job_name = 'DELETE_PENDING';
+
 select * from  user_scheduler_jobs;
 
 
@@ -303,3 +308,32 @@ select * from questions
         where user_id = 2
         ) AS user_watching
         FROM    dual
+        
+     select * from questions
+			where QUESTION_DATE >= trunc(sysdate)
+			order by  question_date Desc
+			offset ((1-1)*5) rows
+			fetch first 5 rows only;
+            
+    select options.* from options join questions on options.QUESTION_ID = questions.QUESTION_ID
+    where options.question_id in(
+         select questions.question_id from questions
+			where QUESTION_DATE >= trunc(sysdate)
+			order by  question_date Desc
+			offset ((1-1)*5) rows
+			fetch first 5 rows only
+    );
+    
+    select options.* from options join questions on options.QUESTION_ID = questions.QUESTION_ID
+    where options.question_id in(
+    select questions.question_id from questions
+			where QUESTION_DATE >= trunc(sysdate)
+			order by  watches Desc 
+			offset ((1-1)*5) rows
+            fetch first 5 rows only);
+            
+            select count(*) from questions where question_date <= trunc(sysdate);
+             select count(*) from questions where question_date < trunc(sysdate-14);
+             
+             
+            

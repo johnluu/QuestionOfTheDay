@@ -12,7 +12,7 @@ CREATE TABLE USERS (
 
   USER_ID numeric generated always as identity(start with 1 increment by 1) not null,
   EMAIL VARCHAR(30) UNIQUE,
-  PASSWORD VARCHAR(10) NOT NULL,
+  PASSWORD VARCHAR(20) NOT NULL,
   first_name varchar(20) not null,
   last_name varchar(20) not null,
   watches NUMERIC default 0,
@@ -57,7 +57,6 @@ CREATE TABLE USER_WATCHING(
 
   QUESTION_ID NUMERIC,
   USER_ID NUMERIC,
-  WATCHING number(1) default 1,
  
   CONSTRAINT USER_WATCHING_PK PRIMARY KEY (QUESTION_ID,USER_ID),
   FOREIGN KEY (USER_ID) REFERENCES USERS(USER_ID),

@@ -9,5 +9,6 @@ public interface CommentDAOI {
 
 	public List<Comments> getQuestionComments(int questionid) throws SQLException;
 	public int createComment(Comments comment) throws SQLException;
+	boolean deleteComment(int commentid) throws SQLException;
 	
 }
