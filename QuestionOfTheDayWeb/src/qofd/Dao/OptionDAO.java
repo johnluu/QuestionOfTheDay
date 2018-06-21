@@ -318,7 +318,6 @@ public class OptionDAO implements OptionsDAOI{
 			if(result.next())
 			{
 				id = result.getInt(1);
-				System.out.println(id);
 			}
 			
 		} catch (ClassNotFoundException | IOException | SQLException e) {

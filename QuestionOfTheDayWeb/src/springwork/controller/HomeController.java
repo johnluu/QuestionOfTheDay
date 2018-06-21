@@ -50,7 +50,7 @@ public class HomeController {
 		}
 		else
 		{
-			mav = new ModelAndView("DashBoard");
+			mav = new ModelAndView("HomePage");
 			mav.addObject("loginmessage", "Username And Password did not match");
 			
 		}
@@ -148,10 +148,6 @@ public class HomeController {
 		
 		ModelAndView mav = MavHelperFunction.getQuestionMain(request);
 		
-		System.out.println();
-		System.out.println("Delivering things");
-
-		
 		
 
 		return mav;
@@ -205,7 +201,6 @@ public class HomeController {
 		}
 		
 		
-		System.out.println(optionid + " completed - returning");
 		
 		String type = request.getParameter("type");
 		if(type == null || type.equals("main"))
@@ -230,7 +225,6 @@ public class HomeController {
 		String requestqid =  request.getParameter("questionid");
 		String requestoid =  request.getParameter("optionid");
 		
-		System.out.println(requestqid + requestoid);
 		
 		if(requestqid != null)
 			questionid = Integer.parseInt(requestqid);
@@ -241,7 +235,6 @@ public class HomeController {
 		int userid = user.getUser_id();
 		int userchoice = ucDAO.getUserQChoice(userid, questionid);	
 		
-		System.out.println(questionid+ " " + optionid + " " + userchoice + " " + userid);
 		if(optionid != 0)
 		{
 		if(userchoice == 0)
@@ -280,9 +273,7 @@ public class HomeController {
 		String watching = null;
 		watching = request.getParameter("watching");
 		
-		
-		System.out.println("watching ="+  watching + " userid = " + userid + "questionid=" + questionid) ;
-	
+			
 		if(watching.equals("UnWatch"))
 			uwDAO.unwatch(user.getUser_id(), questionid);
 		else
@@ -320,7 +311,6 @@ public class HomeController {
 		int userid = user.getUser_id();
 		int userchoice = ucDAO.getUserQChoice(userid, questionid);	
 		
-		System.out.println(userid+ " " + questionid + " " + choice + " " + getcomment);
 
 		cDAO.createComment(new Comments(userid, questionid, choice, getcomment));
 		
@@ -332,7 +322,6 @@ public class HomeController {
 	@RequestMapping(value="/QuestionWatch", method = RequestMethod.POST)
 	public ModelAndView QuestionWatch(HttpServletRequest request ) throws SQLException  {
 		
-		System.out.println("completed - returning");
 		
 		ModelAndView mav = null;
 		
@@ -351,7 +340,6 @@ public class HomeController {
 		if(requestqid != null)
 			questionid = Integer.parseInt(requestqid);
 		
-		System.out.println("watching ="+  watching + " userid = " + userid + "questionid=" + questionid) ;
 	
 		if(watching.equals("UnWatch"))
 			uwDAO.unwatch(user.getUser_id(), questionid);
@@ -473,7 +461,6 @@ public class HomeController {
 		
 		int userchoice = ucDAO.getUserQChoice(userid, questionid);	
 		
-		System.out.println(questionid+ " " + optionid + " " + userchoice + " " + userid);
 
 		
 		if(optionid != 0)

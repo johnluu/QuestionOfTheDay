@@ -71,7 +71,6 @@ public class MavHelperFunction {
 		
 		int Offset = Integer.parseInt(Page);
 
-		System.out.println("type= " + type +" sort= " + sort + " page = " + Page + " Offset =" + Offset);
 		
 		
 		
@@ -143,9 +142,7 @@ public class MavHelperFunction {
 				
 			}
 		
-		for(Question q:QuestionList)
-			System.out.println(q.getQuestion_id());
-			
+
 		mav.addObject("sort", sort);
 		mav.addObject("page", Page);
 		mav.addObject("QuestionList", QuestionList);
@@ -187,10 +184,6 @@ public class MavHelperFunction {
 		HashMap<Integer,Integer> userChoices = null; 
 		HashSet<Integer> userWatching = null;
 
-		
-		System.out.println();
-		System.out.println("Delivering sub menu things");
-		System.out.println(type);
 
 		if(!type.equals("pending"))
 		{
@@ -260,16 +253,7 @@ public class MavHelperFunction {
 		
 		
 		Date questiondate = sdf.parse(question.getDate());
-		
-		System.out.println(currentday.toString());
-		System.out.println(questiondate.toString());
-
-		
 		Long diffDays = (currentday.getTime() - questiondate.getTime()) / (1000 * 60 * 60 * 24);
-		
-		System.out.println(diffDays);
-		System.out.println((currentday.getTime() - questiondate.getTime()));
-
 		User creator = uDAO.getUser(question.getUser_id());
 
 		
@@ -372,19 +356,6 @@ public class MavHelperFunction {
 		mav.addObject("followCount", followcount);
 		mav.addObject("creatorList", creatorList);
 
-
-		for(Question q: questionList)
-		{
-			System.out.println(q.getQuestion_id());
-			
-			for(Option o: optionList.get(q.getQuestion_id()))
-				System.out.println(o.get_question_id());
-			
-		}
-		
-	
-		
-		
 		
 		return mav;
 

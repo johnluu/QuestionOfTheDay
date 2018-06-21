@@ -283,7 +283,6 @@ public class UserChoicesDAO implements UserChoicesDAOI{
 		if(stmt != null)
 			stmt.close();
 		
-		System.out.println(userid + " " + questionid);
 		return userChoice;
 	}
 	

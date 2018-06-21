@@ -22,8 +22,6 @@
 		response.sendRedirect("/QuestionOfTheDayWeb/DashBoard");	
 	}
 
-	String message = request.getParameter("message");
-
 
 	
 	
@@ -82,13 +80,14 @@ before it was archived. This stage lasts a week until the question is deleted.
 
 <div class = "homeright">
 <h1>Register Now</h1>
+
 ${message}
 <form class="registerform" action= "Register" method = "post">
 Email <input type="email" name="registeremail" placeholder='Email' required/> <br/>
 First Name <input type = "text" name ="firstname"  placeholder='FirstName' required/><br/>
 Last Name<input type="text" name="lastname"  placeholder='LastName' required/> <br/>
-Password <input id="password" name="password" oninput="setCustomValidity('') oninvalid="setCustomValidity('Password not strong enough: Needs to be at least 6 character, 1 uppercase, 1 lowercase, 1 number')" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}" type = "password" name ="registerpassword"  placeholder='Password' required/><br/>
-Confirm Password <input oninput="check(this)" type = "password" name ="registerpassword"  placeholder='Confirm Password' required/><br/>
+Password <input id="password" name="password" oninput="check()" oninvalid="setCustomValidity('Password not strong enough: Needs to be at least 6 character, 1 uppercase, 1 lowercase, 1 number')" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}" type = "password" name ="registerpassword"  placeholder='Password' required/><br/>
+Confirm Password <input id="confirm" oninput="check()" type = "password" name ="registerpassword"  placeholder='Confirm Password' required/><br/>
 <input type= "submit" name="register" value="register" /> <br>
 </form>
 
@@ -102,12 +101,24 @@ Confirm Password <input oninput="check(this)" type = "password" name ="registerp
 </body>
 
 <script>
-    function check(input) {
-        if (input.value != document.getElementById('password').value) {
-            input.setCustomValidity('Password Must be Matching.');
+    function check() {
+    	
+    	
+ 	 	 document.getElementById('password').setCustomValidity('Password not strong enough: Needs to be at least 6 character, 1 uppercase, 1 lowercase, 1 number');
+
+    	
+    	if(/^((?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,})$/.test( document.getElementById('password').value))
+     	 	 document.getElementById('password').setCustomValidity('');
+
+    	
+    	 
+    	console.log((document.getElementById('confirm').value + " " + document.getElementById('password').value));
+        if (document.getElementById('confirm').value != document.getElementById('password').value) {
+        	document.getElementById('confirm').setCustomValidity('Password Must be Matching.');
         } else {
             // input is valid -- reset the error message
-            input.setCustomValidity('');
+            document.getElementById('confirm').setCustomValidity('');
+           
         }
     }
 </script>

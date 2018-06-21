@@ -60,7 +60,6 @@ public class UserWatchingDAO implements UserWatchingDAOI {
 		if(stmt3 != null)
 			stmt3.close();
 		
-		System.out.println(id);
 		return id;
 	}
 

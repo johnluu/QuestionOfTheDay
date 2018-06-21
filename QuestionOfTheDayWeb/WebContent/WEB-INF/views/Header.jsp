@@ -70,7 +70,7 @@
 	{
 %>
 
-${loginmessage}
+<p>${loginmessage} </p>
 <form action ="Login" method = "POST">
 <div class = "logincontainer">
 <div class = "logininput">
